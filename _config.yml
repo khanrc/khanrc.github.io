@@ -9,10 +9,13 @@ author:
   fullname: Junbum Cha
   facebook: khanrc2
   github: khanrc
-  twitter: khanrc
+  # twitter: khanrc
   # disqus: your_disqus_username
 
 # google_analytics: 'UA-XXXXXXXX-X'
 
 # Build settings
 markdown: kramdown
+
+kramdown:
+  input: GFM
