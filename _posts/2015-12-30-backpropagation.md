@@ -16,8 +16,8 @@ https://www.youtube.com/watch?v=q0pm3BrIUFo
 
 - - -
 ![bp1]({{ site.url }}/assets/bp.png)
-![bp2](../assets/bp2.png)
-![bp3](../assets/bp3.png)
+![bp2](/assets/bp2.png)
+![bp3](/assets/bp3.png)
 
 - - -  
 
