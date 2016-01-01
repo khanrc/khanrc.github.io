@@ -1,21 +1,49 @@
-# Site settings
-title: Khanrc's blog
-description: description
+# # # # # # # #
+#   K i k o   #
+# # # # # # # #
 
-baseurl: "" # the subpath of your site, e.g. /blog/
-url: "http://khanrc.github.io" # the base hostname & protocol for your site
+# Basic
+name:               "Khanrc"
+description:        "Khanrc's blog"
 
-author:
-  fullname: Junbum Cha
-  facebook: khanrc2
-  github: khanrc
-  # twitter: khanrc
-  # disqus: your_disqus_username
+# URL
+baseurl:            ""
+#baseurl:            "" #For Root Domain
+permalink:          /:year/:month/:day/:title.html
 
-# google_analytics: 'UA-XXXXXXXX-X'
+# markdown: kramdown
 
-# Build settings
-markdown: kramdown
+# kramdown:
+#   input: GFM
 
-kramdown:
-  input: GFM
+markdown: redcarpet
+markdown_ext:  markdown,mkdown,mkdn,mkd,md
+
+redcarpet:
+  extensions: ["tables", "autolink", "strikethrough", "space_after_headers", "with_toc_data", "fenced_code_blocks", "no_intra_emphasis", "footnotes"]
+
+# Navigation
+nav:
+  - name:           "About"
+    href:           "/about"
+  - name:           "Tags"
+    href:           "/tags"
+
+# Sass
+sass:
+  style:            :compressed
+
+# Scopes
+defaults:
+  -
+    scope:
+      path:         ""
+      type:         "pages"
+    values:
+      layout:       "page"
+  -
+    scope:
+      path:         ""
+      type:         "posts"
+    values:
+      layout:       "post"

@@ -1,14 +1,10 @@
 ---
-layout: default
+layout: page
 title: Tag Archive
 description: "An archive of posts sorted by tag."
 comments: false
+permalink: /tags/
 ---
-
-<h1 class="page-title">
-    <!-- <div class="page-title__text"> {{ page.title }} </div> -->
-    <div class="page-title__subtitle">{{ page.title }}</strong></div>
-</h1>
 
 {% capture site_tags %}{% for tag in site.tags %}{{ tag | first }}{% unless forloop.last %},{% endunless %}{% endfor %}{% endcapture %}
 {% assign tags_list = site_tags | split:',' | sort %}

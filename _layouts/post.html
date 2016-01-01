@@ -1,12 +1,32 @@
 ---
 layout: default
 ---
-{% include post/title.html %}
 
-<div class="content">
-    {{ content }}
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      jax: ["input/TeX", "output/HTML-CSS"],
+      tex2jax: {
+        inlineMath: [ ['$', '$'], ["\\(", "\\)"] ],
+        displayMath: [ ['$$', '$$'], ["\\[", "\\]"] ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+      //,
+      //displayAlign: "left",
+      //displayIndent: "2em"
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+
+<header class="masthead">
+  <h1 class="masthead-title--small">
+    <a href="{{ site.baseurl }}/">{{ site.name }}</a>
+  </h1>
+</header>
+<div class="content post">
+  <h1 class="post-title">{{ page.title }}</h1>
+  <div class="post-date">
+    <time>{{ page.date | date_to_string }}</time>
+  </div>
+  {{ content }}
 </div>
-
-{% include post/about.html %}
-
-{% include externals/disqus.html %}
