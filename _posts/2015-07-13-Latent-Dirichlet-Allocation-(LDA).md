@@ -32,7 +32,7 @@ LDA는 확률에 기반하여 도큐먼트를 **토픽들(mixture of topics)**�
 
   * 푸아송 분포(Poisson distribution)에 따라, 도큐먼트에 들어갈 N개의 단어를 결정.
   * K개의 토픽 셋에서 디리클레 분포(Dirichlet distribution)에 따라, 도큐먼트의 토픽들을 결정. 예를 들어, 위 예제에서 food와 cute animal의 두가지 토픽이 있다고 하면, 도큐먼트는 1/3 food와 2/3 cute animal로 구성되도록 선택되었을 것이다.
-  * 도큐먼트의 각 단어 를 선택한다:   
+  * 도큐먼트의 각 단어 $w_i$를 선택한다:   
 
     * 먼저 토픽을 고른다: 위에서 조사한 다항분포(multinomial distribution)에 따라. 예를 들어, food와 cute animal을 1/3과 2/3으로 선택하였다.
     * 이 토픽을 사용해서, 토픽의 다항분포에 따라 단어를 생성한다. 예를 들어, food 토픽을 선택했다면, "broccoli"는 30%, "bananas"는 15% 등의 확률로 생성한다.

@@ -52,32 +52,38 @@ MLE는 주어진 데이터의 통계모델의 파라메터를 추정하는 방�
 
 #### Return to Scaling up with Noise-Contrastive Training
 
-Neural probabilistic language model은 이전 단어들  (for "history") 가 주어졌을 때 다음 단어  (for "target") 의 확률을 추정하는 MLE를 통해 학습된다. 이 과정은 softmax function에 기반한다:
+Neural probabilistic language model은 이전 단어들 $h$ (for "history") 가 주어졌을 때 다음 단어 $w_t$ (for "target") 의 확률을 추정하는 MLE를 통해 학습된다. 이 과정은 softmax function에 기반한다:
 
-여기서  는 타겟 단어  와 컨텍스트  의 공존 가능성 (compatibility) 를 계산한다 - 보통 dot product를 쓴다. 이 모델을 학습하기 위해 트레이닝 셋에 대해, log-likelihood를 최대화한다:
+$$ \begin{align} P(w_t | h) &amp;= \text{softmax}(\text{score}(w_t, h)) \\\ &amp;= \frac{\exp \\{ \text{score}(w_t, h) \\} } {\sum_\text{Word w' in Vocab} \exp \\{ \text{score}(w', h) \\} }. \end{align} $$
 
-> 근데 가 probability (posterior) 아닌가? likelihood면  여야 할 것 같은데…
+여기서 $\text{score}(w_t, h)$ 는 타겟 단어 $w_t$ 와 컨텍스트 $h$ 의 공존 가능성 (compatibility) 를 계산한다 - 보통 dot product를 쓴다. 이 모델을 학습하기 위해 트레이닝 셋에 대해, log-likelihood를 최대화한다:
+
+$$ \begin{align} J_\text{ML} &amp;= \log P(w_t | h) \\\ &amp;= \text{score}(w_t, h) - \log \left( \sum_\text{Word w' in Vocab} \exp \\{ \text{score}(w', h) \\} \right) \end{align} $$
+
+> 근데 $P(w_t|h)$가 probability (posterior) 아닌가? likelihood면 $P(h|w_t)$ 여야 할 것 같은데…
 
 이 방법은 적절하게 normalized된 probabilistic language model 을 학습하지만, 문제는 이 방법은 너무 비싸다. 다음에 어떤 단어가 나올지를 예측하기 위해 모든 단어들에 대해 확률을 전부 계산하고 노멀라이즈 해야 한다. 그리고 이 과정을 모든 training step마다 반복해야 한다.
 
 ![softmax-nplm](https://www.tensorflow.org/versions/master/images/softmax-nplm.png)
 
-반면, word2vec의 feature learning 에서는 full probabilistic model을 학습할 필요가 없다. CBOW와 skip-gram 모델이 binary classification object (logistic regression) 을 사용해서 학습하는 대신, 같은 컨텍스트에서 개의 가상의 (noise) 단어 로부터 타겟 단어  를 구별한다. 아래는 CBOW에 대한 그림이다. skip-gram은 단지 방향만 반대로 하면 된다:
+반면, word2vec의 feature learning 에서는 full probabilistic model을 학습할 필요가 없다. CBOW와 skip-gram 모델이 binary classification object (logistic regression) 을 사용해서 학습하는 대신, 같은 컨텍스트에서 $k$개의 가상의 (noise) 단어 $\tilde w$로부터 타겟 단어 $w_t$ 를 구별한다. 아래는 CBOW에 대한 그림이다. skip-gram은 단지 방향만 반대로 하면 된다:
 
 ![CBOW](https://www.tensorflow.org/versions/master/images/nce-nplm.png)
 
-> 잘 이해는 안 가지만, 이미지를 참고하면, 원래는 모든 가능한 단어 에 대해 확률을 구해봐야 했지만 CBOW 혹은 skip-gram 에서는 k개의 imaginary (noise) 단어  에 대해서만 테스트하여 학습 속도를 향상시킨다.
+> 잘 이해는 안 가지만, 이미지를 참고하면, 원래는 모든 가능한 단어 $w'$에 대해 확률을 구해봐야 했지만 CBOW 혹은 skip-gram 에서는 k개의 imaginary (noise) 단어 $\tilde w$ 에 대해서만 테스트하여 학습 속도를 향상시킨다.
 
 수학적으로, 이 예제에 대해, 다음 objective 를 최대화 하는 것을 목표로 한다:
 
-는, 임베딩 벡터 를 학습하면서, 데이터셋 에서 컨텍스트 하에서 단어 가 나올 확률을 계산하는 binary logistic regression probability 모델이다. 실제 학습에서는, noise distribution으로부터 k contrastive words를 샘플링 (drawing) 함으로써 기대값 (expectation) 을 추정한다. (즉, [Monte Carlo average](https://en.wikipedia.org/wiki/Monte_Carlo_integration) 를 계산한다)
+$$ J_\text{NEG} = \log Q_\theta(D=1 |w_t, h) + k \mathop{\mathbb{E}}_{\tilde w \sim P_\text{noise}} \left[ \log Q_\theta(D = 0 |\tilde w, h) \right] $$
+
+$Q_\theta(D=1 | w, h)$ 는, 임베딩 벡터 $\theta$를 학습하면서, 데이터셋 $D$에서 컨텍스트 $h$하에서 단어 $w$가 나올 확률을 계산하는 binary logistic regression probability 모델이다. 실제 학습에서는, noise distribution으로부터 k contrastive words를 샘플링 (drawing) 함으로써 기대값 (expectation) 을 추정한다. (즉, [Monte Carlo average](https://en.wikipedia.org/wiki/Monte_Carlo_integration) 를 계산한다)
 
 > Monte Carlo average (integration):   
 몬테카를로 적분 (integration) 은 랜덤을 이용해서 적분하는 방법이다. 랜덤하게 난수를 발생시키고, 해당 난수가 적분 범위 안에 들어가는 확률을 계산하여 이를 통해 적분한다. 도형의 넓이를 계산한다고 생각해 보면 쉽게 이해할 수 있음.
 > 
-> 여기서 임베딩 벡터  는 word embedding에서 바로 그 임베딩 벡터를 말함.
+> 여기서 임베딩 벡터 $\theta$ 는 word embedding에서 바로 그 임베딩 벡터를 말함.
 
-위의 목적 함수 (objective) 는 real word에 높은 확률을 할당하고 noise word에 낮은 확률을 할당했을 때 최대화된다. 기술적으로, 이는 [Negative Sampling](http://papers.nips.cc/paper/5021-distributed-representations-of-words-and-phrases-and-their-compositionality.pdf) 이라 불린다. 이 함수는 위 소프트맥스 함수 () 를 근사하지만 훨씩 더 적은 계산량을 가지고, 이는 훨씬 빠른 학습속도를 제공한다. 우리는 정확하게는 이와 거의 유사한 [noise-contrastive estimation (NCE)](http://papers.nips.cc/paper/5165-learning-word-embeddings-efficiently-with-noise-contrastive-estimation.pdf) 를 사용한다. 이는 TensorFlow 에서 `tf.nn.nce_loss()`라는 함수로 제공하므로 편리하게 사용할 수 있다.
+위의 목적 함수 (objective) 는 real word에 높은 확률을 할당하고 noise word에 낮은 확률을 할당했을 때 최대화된다. 기술적으로, 이는 [Negative Sampling](http://papers.nips.cc/paper/5021-distributed-representations-of-words-and-phrases-and-their-compositionality.pdf) 이라 불린다. 이 함수는 위 소프트맥스 함수 ($J_{ML}$) 를 근사하지만 훨씩 더 적은 계산량을 가지고, 이는 훨씬 빠른 학습속도를 제공한다. 우리는 정확하게는 이와 거의 유사한 [noise-contrastive estimation (NCE)](http://papers.nips.cc/paper/5165-learning-word-embeddings-efficiently-with-noise-contrastive-estimation.pdf) 를 사용한다. 이는 TensorFlow 에서 `tf.nn.nce_loss()`라는 함수로 제공하므로 편리하게 사용할 수 있다.
 
 ### The Skip-gram Model
 
@@ -93,11 +99,13 @@ Neural probabilistic language model은 이전 단어들  (for "history") 가 주
 
 object function 은 데이터셋 전체에 대한 함수이지만, 우리는 학습을 위해 online 혹은 minibatch learning 을 사용한다. 이를 자세히 살펴보자. 보통 minibatch 에서 batch_size 는 16에서 512 사이다.
 
-위 트레이닝 셋에서 제일 첫 번째 케이스로 트레이닝 스텝 를 생각해보자. 우리의 목표는 `quick` 으로부터 `the` 를 예측하는 것이다. 먼저 noisy (contrastive) example 의 수를 나타내는 `num_noise` 를 선택해야 한다. noisy example 은 noise distribution 을 따르며, 이 분포는 일반적으로 unigram distribution  이다. 간단하게 하기 위해 `num_noise=1` 이라 하고 noisy example 로는 `sheep` 을 사용하자. 그러면 loss function을 계산할 수 있다:
+위 트레이닝 셋에서 제일 첫 번째 케이스로 트레이닝 스텝 $t$를 생각해보자. 우리의 목표는 `quick` 으로부터 `the` 를 예측하는 것이다. 먼저 noisy (contrastive) example 의 수를 나타내는 `num_noise` 를 선택해야 한다. noisy example 은 noise distribution 을 따르며, 이 분포는 일반적으로 unigram distribution $P(w)$ 이다. 간단하게 하기 위해 `num_noise=1` 이라 하고 noisy example 로는 `sheep` 을 사용하자. 그러면 loss function을 계산할 수 있다:
 
-> unigram distribution  라는 것은 전체 데이터셋에서 각 단어의 unigram으로 생성한 확률분포를 의미하는 듯. sheep 이 위 데이터셋에 없다는 것이 이상한데, 일단 위 예제는 데이터셋의 일부라고 생각해보자.
+> unigram distribution $P(w)$ 라는 것은 전체 데이터셋에서 각 단어의 unigram으로 생성한 확률분포를 의미하는 듯. sheep 이 위 데이터셋에 없다는 것이 이상한데, 일단 위 예제는 데이터셋의 일부라고 생각해보자.
 
-이 과정의 목표는 임베딩 파라메터  를 업데이트하여 object function 을 최적화 (여기서는 최대화) 하는 것이다. 이를 위해, 임베딩 파라메터  에 대해 loss의 gradient를 계산한다. 여기서는  를 계산한다 - TensorFlow는 이를 위한 함수를 제공한다. 이후 이 gradient의 방향으로 임베딩 파라메터를 약간 업데이트한다. 이 과정을 전체 데이터셋에 대해 반복하면, 임베딩 벡터는 점차 실제 단어의 위치로 이동한다 - real words와 noise words가 분리될때까지.
+$J^{(t)}_\text{NEG} = \log Q_\theta(D=1 | \text{the, quick}) +\log(Q_\theta(D=0 | \text{sheep, quick}))$
+
+이 과정의 목표는 임베딩 파라메터 $\theta$ 를 업데이트하여 object function 을 최적화 (여기서는 최대화) 하는 것이다. 이를 위해, 임베딩 파라메터 $\theta$ 에 대해 loss의 gradient를 계산한다. 여기서는 $\frac{\partial}{\partial \theta} J_\text{NEG}$ 를 계산한다 - TensorFlow는 이를 위한 함수를 제공한다. 이후 이 gradient의 방향으로 임베딩 파라메터를 약간 업데이트한다. 이 과정을 전체 데이터셋에 대해 반복하면, 임베딩 벡터는 점차 실제 단어의 위치로 이동한다 - real words와 noise words가 분리될때까지.
 
 이 학습 과정을 [t-SNE dimensionality reduction technique](http://lvdmaaten.github.io/tsne/) 같은 방법을 사용해서 2차원 혹은 3차원 공간으로 차원축소하여 시각화 할 수 있다. 이 과정을 살펴보면, 우리가 원하는 대로 단어의 의미를 잘 추출하여 벡터공간에 임베딩하는 것을 확인할 수 있다:
 
