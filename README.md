@@ -7,6 +7,7 @@ Jekyll is a static site generator. Kiko is a extremely minimal thema for Jekyll.
 * opengraph
 
 ## Planning to add
+* disqus (comment service)
 * full-text search
 
 ## License
