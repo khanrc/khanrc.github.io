@@ -14,8 +14,8 @@ tags: ['ETC']
 
 나는 고민 끝에 Redcarpet으로 정했다. mathjax 가 제대로 작동을 안 해서 tex 코드가 그대로 나오는 것까진 참을 수 있지만 중간에 이상하게 테이블이 들어가 버리면 아예 해독이 안 될 수 있다. 그리고 레드카펫의 no_intra_emphasis 옵션도 매력적이다.
 
-### Migration
-티스토리의 글들을 마크다운으로 변환하기 위해 마이그레이터를 만들었다. html을 마크다운으롤 변환하기 위한 파서로는 html2text 를 사용했다. 
+### [Migration](https://github.com/khanrc/tistory2jekyll)
+티스토리의 글들을 마크다운으로 변환하기 위해 마이그레이터를 만들었다. html을 마크다운으롤 변환하기 위한 파서로는 html2text 를 사용했다. 위에서 말한 것처럼 mathjax 에 문제가 있고, category 시스템에서 tag 시스템으로 변경하면서 수정해 주고 싶은 부분도 있었기 때문에 일괄 처리를 위해 rearranger를 만들었다. rearranger는 태그를 변경하고, mathjax 코드를 div태그로 묶어서 깨지지 않게 돕는다.
 
 
 
