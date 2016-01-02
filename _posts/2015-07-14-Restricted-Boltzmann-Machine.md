@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Restricted Boltzmann Machine"
-tags: ['DataScience/Deep Learning']
+tags: ['Deep Learning']
 date: 2015-07-14 15:23:00
 ---
 # Restricted Boltzmann Machine
@@ -19,19 +19,19 @@ date: 2015-07-14 15:23:00
 **Boltzmann distribution:**   
 
 
-$$p(s) \propto e^{-\frac{E}{kT}}$$
+<div>$$p(s) \propto e^{-\frac{E}{kT}}$$</div>
 
 여기서 p는 확률을 나타내고, s는 노드들의 상태(state), E는 에너지, k는 볼츠만 상수, T는 온도를 의미한다. 역학 모델을 차용한 것이지 실제 물리적 상황이 아니므로, kT는 계산의 편의를 위해 1로 놓는다. 또한 확률분포에서 확률의 총합은 1이 되어야 하므로 normalizing factor Z를 적용하면 위 식은 아래와 같다.   
 
 
-$$p(s)=\frac{1}{Z}e^{-E}$$
+<div>$$p(s)=\frac{1}{Z}e^{-E}$$</div>
 
 결국 중요한 것은 에너지다. 에너지는 낮을 수록 안정적이고, 이 모델은 그래프가 가장 안정적인 경우를 가장 가능성(probable) 있는 상태로 판단한다(위 식에서 에너지가 낮을 수록 확률이 높다). 그럼 이 때 에너지 E의 구조를 보자.
 
 **Energy of Boltzmann machine:**   
 
 
-$$E=-(\sum_{i&lt;j} w_{ij}s_i s_j + \sum_{i} \theta_i s_i)$$
+<div>$$E=-(\sum_{i&lt;j} w_{ij}s_i s_j + \sum_{i} \theta_i s_i)$$</div>
 
 $s_i$는 i번째 노드의 값이고, 0 또는 1이다. $\theta_i$는 노드의 bias다. $w_{ij}$는 노드i와 j를 잇는 엣지의 weight다.   
 즉, 활성화(activate)된 모든 노드의 bias와 활성화된 노드간의 엣지 weight를 전부 더해서 음수를 취하면 에너지 E를 구할 수 있다. 
@@ -49,12 +49,12 @@ $s_i$는 i번째 노드의 값이고, 0 또는 1이다. $\theta_i$는 노드의 
 **Energy and Probability of a Restricted Boltzmann Machine:**   
 
 
-$$\begin{eqnarray} E(v,h)&amp;=&amp;-(\sum_i a_i v_i + \sum_j b_jh_j + \sum_i \sum_j v_iw_{ij}h_j) \\\ &amp;=&amp;-(a^Tv+b^Th+h^Twv) \end{eqnarray}$$
+<div>$$\begin{eqnarray} E(v,h)&amp;=&amp;-(\sum_i a_i v_i + \sum_j b_jh_j + \sum_i \sum_j v_iw_{ij}h_j) \\\ &amp;=&amp;-(a^Tv+b^Th+h^Twv) \end{eqnarray}$$</div>
 
 a와 b는 각각 visible units과 hidden units의 bias이고, v와 h는 상태를 나타낸다. 이 때 확률은 Boltzmann distribution에 따라   
 
 
-$$P(v,h)=\frac{1}{Z}e^{-E(v,h)}$$
+<div>$$P(v,h)=\frac{1}{Z}e^{-E(v,h)}$$</div>
 
 이다. 에너지가 낮을 수록 확률이 높아진다.
 
@@ -62,22 +62,22 @@ $$P(v,h)=\frac{1}{Z}e^{-E(v,h)}$$
 
 RBM은 unsupervised feature learning이고, 이 모델의 학습은 트레이닝 데이터들의 분포를 나타내는 가장 안정적인 에너지 모델 E를 찾는 것이다. 즉, 트레이닝 데이터 $v_{training}$에서의 확률분포 $p(v_{training})$을 최대화하는 것이라고 할 수 있다. 따라서 이에 대한 log-likelihood 학습이 가능하다. 이하 수식들은 [deepcumen - RBM](http://deepcumen.com/tag/rbm/)에 자세히 나와 있으니 이해가 안 가는 부분은 해당 문서를 참고하자.
 
-$$\begin{equation} \begin{split} \text{ln}\mathcal{L}(\boldsymbol{\theta}|\boldsymbol{v}) = \text{ln}p(\boldsymbol{v}|\boldsymbol{\theta}) = \text{ln} \sum_{\boldsymbol{h}} \frac{1}{Z} e^{-E(\boldsymbol{v},\boldsymbol{h})} &amp;= \text{ln} \sum_{\boldsymbol{h}} e^{-E(\boldsymbol{v},\boldsymbol{h})} - \text{ln}Z \\\&amp; = \text{ln} \sum_{\boldsymbol{h}} e^{-E(\boldsymbol{v},\boldsymbol{h})} - \text{ln}\sum_{\boldsymbol{v}, \boldsymbol{h}} e^{-E(\boldsymbol{v},\boldsymbol{h})} \end{split} \end{equation}$$
+<div>$$\begin{equation} \begin{split} \text{ln}\mathcal{L}(\boldsymbol{\theta}|\boldsymbol{v}) = \text{ln}p(\boldsymbol{v}|\boldsymbol{\theta}) = \text{ln} \sum_{\boldsymbol{h}} \frac{1}{Z} e^{-E(\boldsymbol{v},\boldsymbol{h})} &amp;= \text{ln} \sum_{\boldsymbol{h}} e^{-E(\boldsymbol{v},\boldsymbol{h})} - \text{ln}Z \\\&amp; = \text{ln} \sum_{\boldsymbol{h}} e^{-E(\boldsymbol{v},\boldsymbol{h})} - \text{ln}\sum_{\boldsymbol{v}, \boldsymbol{h}} e^{-E(\boldsymbol{v},\boldsymbol{h})} \end{split} \end{equation}$$</div>
 
 여기서 $Z = \sum_{v , h} e^{-E({v}, {h})} $이다. 이로부터, log-likelihood의 최대값을 구해야 하므로 Gradient Ascent를 사용한다. 따라서 위 식을 미분하면   
 
 
-$$\frac{\partial{\text{ln}\mathcal{L}(\boldsymbol{\theta}|\boldsymbol{v})}}{\partial{\boldsymbol{\theta}}} = -\sum_{\boldsymbol{h}} p(\boldsymbol{h}|\boldsymbol{v}) \frac{\partial}{\partial{\boldsymbol{\theta}}}E(\boldsymbol{v},\boldsymbol{h}) + \sum_{\boldsymbol{v}, \boldsymbol{h}} p(\boldsymbol{v}, \boldsymbol{h}) \frac{\partial}{\partial{\boldsymbol{\theta}}}E(\boldsymbol{v},\boldsymbol{h}) $$
+<div>$$\frac{\partial{\text{ln}\mathcal{L}(\boldsymbol{\theta}|\boldsymbol{v})}}{\partial{\boldsymbol{\theta}}} = -\sum_{\boldsymbol{h}} p(\boldsymbol{h}|\boldsymbol{v}) \frac{\partial}{\partial{\boldsymbol{\theta}}}E(\boldsymbol{v},\boldsymbol{h}) + \sum_{\boldsymbol{v}, \boldsymbol{h}} p(\boldsymbol{v}, \boldsymbol{h}) \frac{\partial}{\partial{\boldsymbol{\theta}}}E(\boldsymbol{v},\boldsymbol{h}) $$</div>
 
 이 된다. 이 식에서 첫번째 항은 주어진 $v$에 대해 모든 $h$에 대한 ${\partial \over \partial\theta} E(v,h)$의 기대값이므로 input data에 대한 값이다. 반면 두번째 항은 모든 $(v, h)$에 대한 ${\partial \over \partial\theta} E(v,h)$의 기대값이므로 input data가 아니라 전체 model에 대한 값이다. 따라서 이는 아래와 같이 요약할 수 있다:
 
-$$\frac{\partial{\text{ln}\mathcal{L}(\boldsymbol{\theta}|\boldsymbol{v})}}{\partial{\boldsymbol{\theta}}} \approx - \langle \frac{\partial}{\partial{\boldsymbol{\theta}}}E(\boldsymbol{v},\boldsymbol{h}) \rangle_{\text{data}} + \langle \frac{\partial}{\partial{\boldsymbol{\theta}}}E(\boldsymbol{v},\boldsymbol{h})) \rangle_{\text{model}} $$
+<div>$$\frac{\partial{\text{ln}\mathcal{L}(\boldsymbol{\theta}|\boldsymbol{v})}}{\partial{\boldsymbol{\theta}}} \approx - \langle \frac{\partial}{\partial{\boldsymbol{\theta}}}E(\boldsymbol{v},\boldsymbol{h}) \rangle_{\text{data}} + \langle \frac{\partial}{\partial{\boldsymbol{\theta}}}E(\boldsymbol{v},\boldsymbol{h})) \rangle_{\text{model}} $$</div>
 
 $\langle ... \rangle$ 은 기대값을 의미한다. 이제, 이 식을 MCMC Gibbs Sampler Contrastive Divergence를 사용해서 학습할 수 있다. 위 식에서 input data에 대한 첫번째 항은 쉽게 구할 수 있지만 모델 전체에 대한 두번째 항은 구하기가 쉽지 않다. 이를 Gibbs Sampling을 이용한 MCMC 추정을 사용해서, 모든 $(v,h)$에 대해 계산하지 않고 $p(v|h)$와 $p(h|v)$를 통해 $v$를 샘플링하여 근사할 수 있다.
 
 그러나 여전히 MCMC의 수렴조건을 계산하는 것이 까다로운데, 이를 $CD_k$(Contrastive Divergence - k) 를 통해 위 근사값을 다시 한번 근사한다. 최종적인 log-likelihood 기울기(미분값)는 아래와 같다:
 
-$$\frac{\partial{\text{ln}\mathcal{L}(\boldsymbol{\theta}|\boldsymbol{v})}}{\partial{\boldsymbol{\theta}}} = - \langle \frac{\partial}{\partial{\boldsymbol{\theta}}}E(\boldsymbol{v},\boldsymbol{h}) \rangle + \langle \frac{\partial}{\partial{\boldsymbol{\theta}}}E(\boldsymbol{v},\boldsymbol{h}) \rangle^{(k)} $$
+<div>$$\frac{\partial{\text{ln}\mathcal{L}(\boldsymbol{\theta}|\boldsymbol{v})}}{\partial{\boldsymbol{\theta}}} = - \langle \frac{\partial}{\partial{\boldsymbol{\theta}}}E(\boldsymbol{v},\boldsymbol{h}) \rangle + \langle \frac{\partial}{\partial{\boldsymbol{\theta}}}E(\boldsymbol{v},\boldsymbol{h}) \rangle^{(k)} $$</div>
 
 이 때 k의 값은 1로 하여도 큰 문제가 없다고 알려져 있다. 지금까지의 과정에 파라메터 업데이트까지 포함하여 아래와 같이 정리할 수 있다.
 

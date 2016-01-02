@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "검색엔진 (2) - 라이브러리: Lucene, Solr, Elasticsearch"
-tags: ['그 외/Tech']
+tags: ['ETC']
 date: 2014-08-26 01:50:00
 ---
 # 검색엔진 라이브러리

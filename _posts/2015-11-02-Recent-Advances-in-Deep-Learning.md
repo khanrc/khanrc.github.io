@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Recent Advances in Deep Learning"
-tags: ['DataScience/Deep Learning']
+tags: ['Deep Learning']
 date: 2015-11-02 22:42:00
 ---
 **Recent Advances in Deep Learning and Introduction to VUNO**

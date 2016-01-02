@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "[kaggle] Bag of Words Meet Bags of Popcorn - (1) Part 1: Bag of Words"
-tags: ['DataScience/Text Mining']
+tags: ['Text Mining']
 date: 2015-07-08 11:46:00
 ---
 # Part 1: For Beginners - Bag of Words

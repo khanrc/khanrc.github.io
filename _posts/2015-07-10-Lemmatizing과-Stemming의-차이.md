@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Lemmatizing과 Stemming의 차이"
-tags: ['DataScience/Text Mining']
+tags: ['Text Mining']
 date: 2015-07-10 16:17:00
 ---
 # Lemmatizing과 Stemming의 차이

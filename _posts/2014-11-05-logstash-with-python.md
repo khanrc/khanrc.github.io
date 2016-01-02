@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "logstash with python"
-tags: ['Server(Back-end)']
+tags: ['Web']
 date: 2014-11-05 11:34:00
 ---
 # logstash

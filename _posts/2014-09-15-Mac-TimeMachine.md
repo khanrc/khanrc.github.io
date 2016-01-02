@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Mac TimeMachine"
-tags: ['Apps']
+tags: ['Test']
 date: 2014-09-15 10:40:00
 ---
 맥에는 타임머신이라는 강력한 백업 기능이 있다.

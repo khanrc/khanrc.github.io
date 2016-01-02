@@ -55,10 +55,10 @@ protein sequences to their secondary structures: 단백질 시퀀스로 단백�
 ### Type of classifiers
 
 일반적인 클래지피케이션 어프로치에서는, 어트리뷰트들이 컨티뉴어스 밸류여야 하고, 각 클래스 c가 다변수 정규분포(multivariate normal distribution)을 따른다고 가정한다.  
-$x \sim N(m_c, \Sigma_c),~m_c:mean,~\Sigma_c:~covariance~matrix$
+<div>$x \sim N(m_c, \Sigma_c),~m_c:mean,~\Sigma_c:~covariance~matrix$</div>
 
 이러한 multivariate-normal pdf(probability density function)를 사용하고 알 수 없는 모평균과 공분산 매트릭스를 샘플(표본)로부터 구한 표본평균과 표본 공분산으로 채움으로써, 각 클래스에 대한 판별함수(discriminant function)를 계산할 수 있다.  
-$g_c(x)=-(x-m_c)\hat\Sigma_c^{-1}(x-m_c)^T-log(|\hat\Sigma_c|)$
+<div>$g_c(x)=-(x-m_c)\hat\Sigma_c^{-1}(x-m_c)^T-log(|\hat\Sigma_c|)$</div>
 
 이 판별함수는 pdf $p(\mathbf x|y=c)$와 같은 경향성을 보인다. 판별함수의 값이 커지면 pdf값도 커진다. 클래스에 대한 판별함수의 값은 class mean과 covariance matrix에 따라 달라지며, 새로운 오브젝트 z는 이 판별함수의 값이 가장 큰 클래스에 할당된다. 이러한 접근은 nonlinear(quadratic) class boundaries를 형성하며, 따라서 이를 quadratic discriminant rule 또는 Gaussian classifier라 한다.
 
@@ -84,7 +84,7 @@ new object **z**와 가까운 오브젝트 k개를 골랐을 때, 클래스 c에
 
 뉴럴 네트워크의 각 노드는, 엣지를 통해 들어오는 각 값들을 [logstic sigmoid](http://en.wikipedia.org/wiki/Sigmoid_function)1 를 통해 노멀라이징한다.
 
-$$\sigma(z)={1 \over 1+\exp(z)}$$
+<div>$$\sigma(z)={1 \over 1+\exp(z)}$$</div>
 
 트레이닝 프로세스가 에러를 최소화할 뿐만 아니라 네트워크의 weights 또한 최소화하려 한다면 위 식은 수정될 수 있다. _weights regularization_ 는, input의 작은 변화가 output에 큰 영향을 끼치는 것을 방지하여 모델의 generalization을 강화한다. 이 방법은 클래스간의 경계(바운더리)가 sharp하지 않다는 것을 가정한다.
 
@@ -94,13 +94,13 @@ $$\sigma(z)={1 \over 1+\exp(z)}$$
 
 책에서 본 내용과는 조금 다르게, SVM도 에러를 허용한다. 
 
-$$\min_w ({1 \over 2}||w||^2+C\sum_{i=1}^{N_T}\xi_i)$$
+<div>$$\min_w ({1 \over 2}||w||^2+C\sum_{i=1}^{N_T}\xi_i)$$</div>
 
 xi($\xi$)가 에러를 의미하며 C는 유저가 지정하는 error control constant다. 즉, Least-square의 relax/exact form같이, relax SVM이라고 할 수 있을 것이며 C=0일때 exact가 된다.
 
 이 optimization problem은 [quadratic programming problem](http://en.wikipedia.org/wiki/Quadratic_programming)을 적용해서 [dual problem](http://en.wikipedia.org/wiki/Duality_%28optimization%29)으로 변환시킬 수 있다. 
 
-$$f(x)=sign(wx^T+b)=sign(\sum_i \alpha_iy_i(x_ix^T)+b)$$
+<div>$$f(x)=sign(wx^T+b)=sign(\sum_i \alpha_iy_i(x_ix^T)+b)$$</div>
 
 이 식에서 $\alpha_i$는 support vector를 의미하고, dual problem을 풀어서 구할 수 있다.
 
@@ -142,7 +142,7 @@ $b(i)$ = the lowest average dissimilarity of $i$ to any other cluster, of which 
 
 즉 a(i)는 지금 할당된 클러스터가 얼마나 적절한지를 알아보는 메저고, b(i)는 다른 클러스터에 할당한다면 어떨까를 알아보는 메저다. 이 둘을 구해서 비교한다:
 
-$$s(i)=\{\{b(i)-a(i)} \over {\max\\{a(i),b(i)\\}}}$$
+<div>$$s(i)=\{\{b(i)-a(i)} \over {\max\\{a(i),b(i)\\}}}$$</div>
 
 s(i)의 값이 1에 가까울수록 b(i) &gt;&gt; a(i)라는 의미고, 이는 즉 잘 클러스터링 되었다는 것을 뜻한다. -1에 가까울수록 다른 클러스터에 할당하는 것이 맞다는 의미다. 0이 나온다면 이는 이 오브젝트가 두 클러스터의 경계에 있다는 것을 의미한다.
 

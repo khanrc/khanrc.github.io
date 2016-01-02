@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Deep Learning Tutorial"
-tags: ['DataScience/Deep Learning']
+tags: ['Deep Learning']
 date: 2015-05-24 17:12:00
 ---
 # [A Deep Learning Tutorial: From Perceptrons to Deep Networks](http://www.toptal.com/machine-learning/an-introduction-to-deep-learning-from-perceptrons-to-deep-networks)

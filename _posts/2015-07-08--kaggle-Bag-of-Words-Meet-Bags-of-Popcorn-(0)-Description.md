@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "[kaggle] Bag of Words Meet Bags of Popcorn - (0) Description"
-tags: ['DataScience/Text Mining']
+tags: ['Text Mining']
 date: 2015-07-08 11:45:00
 ---
 # [Bag of Words Meet Bags of Popcorn - (0) Description](https://www.kaggle.com/c/word2vec-nlp-tutorial)

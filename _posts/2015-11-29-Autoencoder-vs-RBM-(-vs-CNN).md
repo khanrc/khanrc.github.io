@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Autoencoder vs RBM (+ vs CNN)"
-tags: ['DataScience/Deep Learning']
+tags: ['Deep Learning']
 date: 2015-11-29 02:11:00
 ---
 # Autoencoder vs RBM (+ vs CNN)

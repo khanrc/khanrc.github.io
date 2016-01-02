@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Docker & Vagrant"
-tags: ['Server(Back-end)']
+tags: ['Web']
 date: 2014-11-02 22:45:00
 ---
 # Docker &amp; Vagrant

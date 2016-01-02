@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "TensorFlow - (5) MNIST - CNN"
-tags: ['DataScience/Deep Learning']
+tags: ['Deep Learning']
 date: 2015-12-03 01:40:00
 ---
 # [TensorFlow](http://www.tensorflow.org/)

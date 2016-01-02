@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "네트워크 기초 - Switch/Router, LAN/WAN, IP/MAC"
-tags: ['Server(Back-end)']
+tags: ['Web']
 date: 2014-08-05 08:41:00
 ---
 # 네트워크 기초 - Switch/Router, LAN/WAN, IP/MAC

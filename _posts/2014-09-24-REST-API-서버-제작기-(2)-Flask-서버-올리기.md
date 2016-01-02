@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "REST API 서버 제작기 (2) - Flask 서버 올리기"
-tags: ['Server(Back-end)']
+tags: ['Web']
 date: 2014-09-24 23:46:00
 ---
 # REST API 서버 제작기 (2) - Flask 서버 올리기

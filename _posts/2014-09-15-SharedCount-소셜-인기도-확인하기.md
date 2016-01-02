@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "SharedCount: 소셜 인기도 확인하기"
-tags: ['Server(Back-end)']
+tags: ['Web']
 date: 2014-09-15 23:31:00
 ---
 # SharedCount: Facebook, Twitter 공유 개수 확인하기

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "DL4J vs. Torch vs. Theano vs. Caffe"
-tags: ['DataScience/Deep Learning']
+tags: ['Deep Learning']
 date: 2015-08-11 19:29:00
 ---
 # [DL4J vs. Torch vs. Theano vs. Caffe](http://deeplearning4j.org/compare-dl4j-torch7-pylearn.html)

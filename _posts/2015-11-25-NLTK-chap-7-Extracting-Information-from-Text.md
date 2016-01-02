@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "NLTK chap 7. Extracting Information from Text"
-tags: ['DataScience/Text Mining']
+tags: ['Text Mining']
 date: 2015-11-25 21:28:00
 ---
 # [Extracting Information from Text](http://www.nltk.org/book/ch07.html)

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "logstash (2) - with logrotate"
-tags: ['Server(Back-end)']
+tags: ['Web']
 date: 2014-11-07 01:49:00
 ---
 # logstash (2) - with logrotate

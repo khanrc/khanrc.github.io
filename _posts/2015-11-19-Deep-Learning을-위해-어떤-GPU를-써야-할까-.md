@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Deep Learning을 위해 어떤 GPU를 써야 할까?"
-tags: ['DataScience/Deep Learning']
+tags: ['Deep Learning']
 date: 2015-11-19 20:45:00
 ---
 ## [Which GPU for Deep Learning?](http://timdettmers.com/2014/08/14/which-gpu-for-deep-learning/)

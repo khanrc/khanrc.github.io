@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "TensorFlow - (4) MNIST - Softmax Regression"
-tags: ['DataScience/Deep Learning']
+tags: ['Deep Learning']
 date: 2015-12-03 01:39:00
 ---
 # [TensorFlow](http://www.tensorflow.org/)
@@ -27,19 +27,19 @@ evidence를 계산하기 위해 픽셀 강도 (pixel intensities) 의 가중합 
 
 또한 인풋 데이터에 독립적인 어떤 가중치가 있을 수 있다. 이를 bias라 한다. 최종적으로 인풋 $x$가 주어졌을 때 클래스 $i$에 대한 evidence는: 
 
-$$\text{evidence}_i = \sum_j W_{i,~ j} x_j + b_i$$
+<div>$$\text{evidence}_i = \sum_j W_{i,~ j} x_j + b_i$$</div>
 
 자 이제 이렇게 계산한 evidence를 softmax 함수를 통해 확률로 변환할 수 있다. 
 
-$$y = \text{softmax}(\text{evidence})$$
+<div>$$y = \text{softmax}(\text{evidence})$$</div>
 
 softmax는 "activation" 혹은 "link" 를 제공한다. linear 한 값 (여기서는 evidence) 을 우리가 원하는 형태 (여기서는 10가지 클래스 라벨에 대한 확률분포) 로 변환해준다. 즉 evidence를 확률로 변환하는 과정이라고 이해할 수 있다. 이는 다음과 같이 정의된다: 
 
-$$\text{softmax}(x) = \text{normalize}(\exp(x))$$
+<div>$$\text{softmax}(x) = \text{normalize}(\exp(x))$$</div>
 
 식을 풀면 이렇게 된다: 
 
-$$\text{softmax}(x)_i = \frac{\exp(x_i)}{\sum_j \exp(x_j)}$$
+<div>$$\text{softmax}(x)_i = \frac{\exp(x_i)}{\sum_j \exp(x_j)}$$</div>
 
 그러나 첫 식으로 이해하는게 더 도움이 될 것이다 - exp(input) 을 normalize 하는 것. exp는 결과의 차이를 부각시키는 효과를 갖고, normalize는 결과를 확률분포로 변환하기 위함이다.
 
@@ -57,7 +57,7 @@ $$\text{softmax}(x)_i = \frac{\exp(x_i)}{\sum_j \exp(x_j)}$$
 
 이는 결국 이렇게 쓸 수 있다: 
 
-$$y = \text{softmax}(Wx + b)$$
+<div>$$y = \text{softmax}(Wx + b)$$</div>
 
 ## [Deep MNIST for Experts](http://www.tensorflow.org/tutorials/mnist/pros/index.html)
 

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "[kaggle] Bag of Words Meet Bags of Popcorn - (4) Part 4: Compare"
-tags: ['DataScience/Text Mining']
+tags: ['Text Mining']
 date: 2015-07-22 15:29:00
 ---
 # Part 4: Comparing deep and non-deep learning methods

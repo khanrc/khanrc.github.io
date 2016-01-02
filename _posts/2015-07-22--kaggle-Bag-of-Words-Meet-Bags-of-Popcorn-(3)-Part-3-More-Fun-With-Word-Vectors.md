@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "[kaggle] Bag of Words Meet Bags of Popcorn - (3) Part 3: More Fun With Word Vectors"
-tags: ['DataScience/Text Mining']
+tags: ['Text Mining']
 date: 2015-07-22 15:27:00
 ---
 # Part 3: More Fun With Word Vectors

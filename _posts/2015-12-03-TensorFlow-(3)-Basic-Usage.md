@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "TensorFlow - (3) Basic Usage"
-tags: ['DataScience/Deep Learning']
+tags: ['Deep Learning']
 date: 2015-12-03 01:38:00
 ---
 # [TensorFlow](http://www.tensorflow.org/)

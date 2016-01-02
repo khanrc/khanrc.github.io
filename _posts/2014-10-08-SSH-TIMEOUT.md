@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "SSH TIMEOUT"
-tags: ['Server(Back-end)']
+tags: ['Web']
 date: 2014-10-08 23:41:00
 ---
 # SSH TIMEOUT

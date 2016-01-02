@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "REST API 서버 제작기 (4) - db연동 및 decorator, contextlib"
-tags: ['Server(Back-end)']
+tags: ['Web']
 date: 2014-10-12 20:46:00
 ---
 # REST API 서버 제작기 (4) - decorator 및 db연동

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "NLTK chap 8. Analyzing Sentence Structure"
-tags: ['DataScience/Text Mining']
+tags: ['Text Mining']
 date: 2015-11-25 21:30:00
 ---
 # [Analyzing Sentence Structure](http://www.nltk.org/book/ch08.html)

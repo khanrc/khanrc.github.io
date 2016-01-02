@@ -19,15 +19,15 @@ likeihood, postierior, prior, MAP, MLE 등등 맨날 나오는 데 뭔지 잘 �
 
 이 두가지 확률은 베이즈 정리로 묶일 수 있다.
 
-$P(철수|형상)=\dfrac{P(형상|철수)P(철수)}{P(형상)}$
+<div>$P(철수|형상)=\dfrac{P(형상|철수)P(철수)}{P(형상)}$</div>
 
 여기서 결국 P(형상)은 고정된 상수값이므로 
 
-$P(철수|형상) \propto P(형상|철수)P(철수)$
+<div>$P(철수|형상) \propto P(형상|철수)P(철수)$</div>
 
 이고, 이를 일반적으로 표현하면
 
-$P(posterior) \propto likelihood \times P(prior) $
+<div>$P(posterior) \propto likelihood \times P(prior) $</div>
 
 이다. P(철수), P(영희) 따위의 클래스 고유의 확률값을 prior 확률이라 한다.
 
@@ -35,7 +35,7 @@ $P(posterior) \propto likelihood \times P(prior) $
 
 이 posterior, likelihood, prior는 Think bayes책의 1.5장 통시적 해석을 보면 좀 더 쉽게 이해할 수 있다. 베이즈 정리를 H와 D에 대해 쓰면
 
-$P(H|D)=\dfrac{P(H)P(D|H)}{P(D)}$
+<div>$P(H|D)=\dfrac{P(H)P(D|H)}{P(D)}$</div>
 
 이다. 짐작컨대, H는 Hypothesis이고 D는 Data인 듯 하다. 이 해석에서 각각의 기호의 의미는 다음과 같다:
 
@@ -48,7 +48,7 @@ $P(H|D)=\dfrac{P(H)P(D|H)}{P(D)}$
 
 머신러닝의 맥락에서, 일반적으로 이는 
 
-$P(C|D)=\dfrac{P(C)P(D|C)}{P(D)}$
+<div>$P(C|D)=\dfrac{P(C)P(D|C)}{P(D)}$</div>
 
 가 된다. posterior를 구하기 위해서 베이즈 정리를 사용한다. prior는 각 클래스의 등장 비율이다. likelihood는 일반적으로 가장 구하기 쉽다고 하는데, 각 클래스에서 해당 데이터의 등장 비율이다. normalizing constant P(D)는 구하기 까다로울 수 있다고 하는데, 클래스와 관계없이 전체 데이터셋에서 해당 데이터의 등장 비율이다. 책을 보면 자세히 나오지만, 이 한정 상수를 구하려면 임의의 데이터가 항상 어떤 클래스를 갖고(어느 클래스에도 안 속하는 경우가 없고), 여러 클래스를 동시에 가질 수 없다는 가정이 들어가는 것이 일반적이다.
 
@@ -66,7 +66,7 @@ MAP는 결국 MLE에 prior를 더하는 것이고, 반대로 MLE는 MAP에서 �
 
 지금까지 P(D)라고 간단하게 이야기했지만, 정확히 말하면 보통 이 D는 여러가지 특성(feature)들로 구성되어 있다. 즉, 
 
-$D=(d_1, d_2, ... , d_n)$
+<div>$D=(d_1, d_2, ... , d_n)$</div>
 
 위에서 언급했듯이, P(D)를 구하려면 전체 데이터셋에서 D와 동일한 데이터의 등장 비율을 구하면 된다(물론 정확하게는 모집단에서 D가 등장할 확률을 구해야 한다). 이를 `pure bayes`이라 한다.
 
@@ -74,7 +74,7 @@ $D=(d_1, d_2, ... , d_n)$
 
 이러한 현실적인 문제를 극복하고자 등장한 것이 `naive bayes`이다. `naive bayes`는 각 특성들이 독립이라는 가정 하에 수행된다. 각 특성들이 독립이라면
 
-$P(D)=P(d_1)P(d_2)...P(d_n)$
+<div>$P(D)=P(d_1)P(d_2)...P(d_n)$</div>
 
 이 된다. 특성들이 전부 독립이라는 가정이 맞다면 이는 `pure bayes`와 동일한 결과를 보여준다.
 
@@ -98,17 +98,17 @@ log를 사용하는 맥락은 크게 세가지인데,
 
 MLE에서,
 
-$\mathcal L(\theta|x_1,...,x_n)=f(x_1,x_2,...,x_n|\theta)=\prod_{i=1}^n f(x_i|\theta)$
+<div>$\mathcal L(\theta|x_1,...,x_n)=f(x_1,x_2,...,x_n|\theta)=\prod_{i=1}^n f(x_i|\theta)$</div>
 
 이다. 여기서 벡터 x는 sample이고, theta는 클래스다.
 
 > $\mathcal L(A|B)=P(B|A)$는 B가 주어졌을 때 A의 likelihood이다.
 
-$\log{\mathcal L(\theta|x_1,...,x_n)}=\sum_{i=1}^n \log{f(x_i|\theta)}$
+<div>$\log{\mathcal L(\theta|x_1,...,x_n)}=\sum_{i=1}^n \log{f(x_i|\theta)}$</div>
 
 이고 여기서 maximum likelihood estimtor는 아래와 같다:
 
-$\hat\theta_{MLE}=\mathop{\arg\,\max}\limits_\theta \sum_{i=1}^n \log f(x_i |\theta)$
+<div>$\hat\theta_{MLE}=\mathop{\arg\,\max}\limits_\theta \sum_{i=1}^n \log f(x_i |\theta)$</div>
 
 [arg max](http://egloos.zum.com/etstnt/v/5222752)란, argument of maximum의 약자로 max값을 구했을 때의 argument의 값을 의미한다. 위에서는 theta. 즉, 위 식을 풀어 설명하면 클래스를 바꿔가며 log likelihood를 구했을 때 그 최대값을 찾는 MLE이다.
 
@@ -120,7 +120,7 @@ $\hat\theta_{MLE}=\mathop{\arg\,\max}\limits_\theta \sum_{i=1}^n \log f(x_i |\th
 
 그리고 위 식은 아래와 같이 바꿀 수 있다:
 
-$\mathop{\arg\,\max}\limits_\theta \sum_{i=1}^n \log f(x_i |\theta)=\mathop{\arg\,\min}\limits_\theta -\sum_{i=1}^n \log f(x_i |\theta)=\hat\theta_{MLE}$
+<div>$\mathop{\arg\,\max}\limits_\theta \sum_{i=1}^n \log f(x_i |\theta)=\mathop{\arg\,\min}\limits_\theta -\sum_{i=1}^n \log f(x_i |\theta)=\hat\theta_{MLE}$</div>
 
 즉, negative log likelihood가 MLE를 나타낼 수 있다! [원문](https://quantivity.wordpress.com/2011/05/23/why-minimize-negative-log-likelihood/)을 보면, KL-divergence를 이용해서 무언가를 더 설명하는데 이해가 잘 안 감. 굳이 negative로 바꾸는 이유는, optimization problem이 전부 minimum을 구하기 때문에, 여기서도 negative로 바꿔줘야 arg max가 arg min으로 바뀐다.
 

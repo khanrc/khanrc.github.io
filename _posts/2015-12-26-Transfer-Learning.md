@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Transfer Learning"
-tags: ['DataScience/Deep Learning']
+tags: ['Deep Learning']
 date: 2015-12-26 22:42:00
 ---
 # [Transfer Learning](http://cs231n.github.io/transfer-learning/)

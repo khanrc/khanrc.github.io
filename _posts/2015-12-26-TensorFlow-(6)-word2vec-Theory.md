@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "TensorFlow - (6) word2vec - Theory"
-tags: ['DataScience/Deep Learning']
+tags: ['Deep Learning']
 date: 2015-12-26 02:56:00
 ---
 # [TensorFlow](http://www.tensorflow.org)
@@ -54,11 +54,11 @@ MLE는 주어진 데이터의 통계모델의 파라메터를 추정하는 방�
 
 Neural probabilistic language model은 이전 단어들 $h$ (for "history") 가 주어졌을 때 다음 단어 $w_t$ (for "target") 의 확률을 추정하는 MLE를 통해 학습된다. 이 과정은 softmax function에 기반한다:
 
-$$ \begin{align} P(w_t | h) &amp;= \text{softmax}(\text{score}(w_t, h)) \\\ &amp;= \frac{\exp \\{ \text{score}(w_t, h) \\} } {\sum_\text{Word w' in Vocab} \exp \\{ \text{score}(w', h) \\} }. \end{align} $$
+<div>$$ \begin{align} P(w_t | h) &amp;= \text{softmax}(\text{score}(w_t, h)) \\\ &amp;= \frac{\exp \\{ \text{score}(w_t, h) \\} } {\sum_\text{Word w' in Vocab} \exp \\{ \text{score}(w', h) \\} }. \end{align} $$</div>
 
 여기서 $\text{score}(w_t, h)$ 는 타겟 단어 $w_t$ 와 컨텍스트 $h$ 의 공존 가능성 (compatibility) 를 계산한다 - 보통 dot product를 쓴다. 이 모델을 학습하기 위해 트레이닝 셋에 대해, log-likelihood를 최대화한다:
 
-$$ \begin{align} J_\text{ML} &amp;= \log P(w_t | h) \\\ &amp;= \text{score}(w_t, h) - \log \left( \sum_\text{Word w' in Vocab} \exp \\{ \text{score}(w', h) \\} \right) \end{align} $$
+<div>$$ \begin{align} J_\text{ML} &amp;= \log P(w_t | h) \\\ &amp;= \text{score}(w_t, h) - \log \left( \sum_\text{Word w' in Vocab} \exp \\{ \text{score}(w', h) \\} \right) \end{align} $$</div>
 
 > 근데 $P(w_t|h)$가 probability (posterior) 아닌가? likelihood면 $P(h|w_t)$ 여야 할 것 같은데…
 
@@ -74,7 +74,7 @@ $$ \begin{align} J_\text{ML} &amp;= \log P(w_t | h) \\\ &amp;= \text{score}(w_t,
 
 수학적으로, 이 예제에 대해, 다음 objective 를 최대화 하는 것을 목표로 한다:
 
-$$ J_\text{NEG} = \log Q_\theta(D=1 |w_t, h) + k \mathop{\mathbb{E}}_{\tilde w \sim P_\text{noise}} \left[ \log Q_\theta(D = 0 |\tilde w, h) \right] $$
+<div>$$ J_\text{NEG} = \log Q_\theta(D=1 |w_t, h) + k \mathop{\mathbb{E}}_{\tilde w \sim P_\text{noise}} \left[ \log Q_\theta(D = 0 |\tilde w, h) \right] $$</div>
 
 $Q_\theta(D=1 | w, h)$ 는, 임베딩 벡터 $\theta$를 학습하면서, 데이터셋 $D$에서 컨텍스트 $h$하에서 단어 $w$가 나올 확률을 계산하는 binary logistic regression probability 모델이다. 실제 학습에서는, noise distribution으로부터 k contrastive words를 샘플링 (drawing) 함으로써 기대값 (expectation) 을 추정한다. (즉, [Monte Carlo average](https://en.wikipedia.org/wiki/Monte_Carlo_integration) 를 계산한다)
 
@@ -103,7 +103,7 @@ object function 은 데이터셋 전체에 대한 함수이지만, 우리는 학
 
 > unigram distribution $P(w)$ 라는 것은 전체 데이터셋에서 각 단어의 unigram으로 생성한 확률분포를 의미하는 듯. sheep 이 위 데이터셋에 없다는 것이 이상한데, 일단 위 예제는 데이터셋의 일부라고 생각해보자.
 
-$J^{(t)}_\text{NEG} = \log Q_\theta(D=1 | \text{the, quick}) +\log(Q_\theta(D=0 | \text{sheep, quick}))$
+<div>$J^{(t)}_\text{NEG} = \log Q_\theta(D=1 | \text{the, quick}) +\log(Q_\theta(D=0 | \text{sheep, quick}))$</div>
 
 이 과정의 목표는 임베딩 파라메터 $\theta$ 를 업데이트하여 object function 을 최적화 (여기서는 최대화) 하는 것이다. 이를 위해, 임베딩 파라메터 $\theta$ 에 대해 loss의 gradient를 계산한다. 여기서는 $\frac{\partial}{\partial \theta} J_\text{NEG}$ 를 계산한다 - TensorFlow는 이를 위한 함수를 제공한다. 이후 이 gradient의 방향으로 임베딩 파라메터를 약간 업데이트한다. 이 과정을 전체 데이터셋에 대해 반복하면, 임베딩 벡터는 점차 실제 단어의 위치로 이동한다 - real words와 noise words가 분리될때까지.
 

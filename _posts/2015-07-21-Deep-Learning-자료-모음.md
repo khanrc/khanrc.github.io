@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Deep Learning 자료 모음"
-tags: ['DataScience/Deep Learning']
+tags: ['Deep Learning']
 date: 2015-07-21 17:20:00
 ---
 ### 자료 모음 페이지

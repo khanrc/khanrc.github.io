@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Haroopad (Markdown Editor)"
-tags: ['Apps']
+tags: ['Test']
 date: 2014-08-04 21:06:00
 ---
 ## [Haroopad](http://pad.haroopress.com/)

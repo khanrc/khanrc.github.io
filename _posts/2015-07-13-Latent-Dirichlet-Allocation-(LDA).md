@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Latent Dirichlet Allocation (LDA)"
-tags: ['DataScience/Text Mining']
+tags: ['Text Mining']
 date: 2015-07-13 14:33:00
 ---
 # Latent Dirichlet Allocation (LDA)

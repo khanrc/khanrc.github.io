@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Nginx deploy! (+uWSGI +flask)"
-tags: ['Server(Back-end)']
+tags: ['Web']
 date: 2014-11-15 19:32:00
 ---
 # Nginx deploy! (+uWSGI +flask)

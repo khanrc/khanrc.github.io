@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "REST API 서버 제작기 (1) - API 정의"
-tags: ['Server(Back-end)']
+tags: ['Web']
 date: 2014-09-24 23:45:00
 ---
 # REST API 서버 제작기 (1) - API 정의

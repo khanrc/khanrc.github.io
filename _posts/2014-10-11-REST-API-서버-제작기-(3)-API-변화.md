@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "REST API 서버 제작기 (3) - API 변화"
-tags: ['Server(Back-end)']
+tags: ['Web']
 date: 2014-10-11 23:37:00
 ---
 # REST API 서버 제작기 (3) - API 변화

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "TensorFlow - (2) Install"
-tags: ['DataScience/Deep Learning']
+tags: ['Deep Learning']
 date: 2015-12-03 01:36:00
 ---
 # [TensorFlow](http://www.tensorflow.org/)

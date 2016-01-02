@@ -14,27 +14,27 @@ date: 2014-10-16 19:08:00
 
 ### Minkowski distance
 
-$$\sqrt[p]{(x_1 - x_2)^p + (y_1 - y_2)^p}$$
+<div>$$\sqrt[p]{(x_1 - x_2)^p + (y_1 - y_2)^p}$$</div>
 
 when p=1: `Manhattan distance`  
 when p=2: `Euclidean distance`
 
 이 측정법은 데이터 분포에 독립적이다. 하지만 x축의 값들이 y축보다 훨씬 크다면 어떨까? 이런 문제들 때문에 우리는 먼저 각각의 컬럼들을 같은 스케일로 맞출 필요가 있다. 일반적으로는 `z-transform`을 사용한다: 각각의 데이터 포인트1를 평균으로 빼고 표준편차로 나눈다.
 
-$$z-transform:~(x_1, y_1)~becomes~(\dfrac{x_1-μ_x}{σ_x}, \dfrac{y_1-μ_y}{σ_y})$$
+<div>$$z-transform:~(x_1, y_1)~becomes~(\dfrac{x_1-μ_x}{σ_x}, \dfrac{y_1-μ_y}{σ_y})$$</div>
 
 ### Mahalanobis distance
 
 이 측정법은, 비록 각 디멘션의 분포를 고려했다 하더라도, 각 디멘션들이 서로 독립이라고 가정한다. 하지만 x-디멘션과 y-디멘션이 서로 `correlation`이 있다면 어떨까? 이렇게 각 디멘션간의 `correlation`을 고려하기 위해, 우리는 이 디스턴스 measure를 사용할 수 있다:
 
-$$\sqrt{(\vec v_1 - \vec v_2)^\top \Omega (\vec v_1 - \vec v_2)}$$
+<div>$$\sqrt{(\vec v_1 - \vec v_2)^\top \Omega (\vec v_1 - \vec v_2)}$$</div>
 
 ### Consine distance
 
 ![Cosine distance](http://1.bp.blogspot.com/-KbVxVkhYDUw/UB8i5eD0bOI/AAAAAAAAAyU/gZgdACaaauM/s320/p1.png)  
 만약 우리가 데이터의 크기보다 방향을 더 고려한다면, `cosine distance`가 일반적인 접근이다. 코사인 디스턴스는 두 데이터 포인트의 dot product를 크기의 곱으로 나눈다.
 
-$$cosine~similarity = \dfrac{AB}{|A||B|}$$
+<div>$$cosine~similarity = \dfrac{AB}{|A||B|}$$</div>
 
 [term/document matrix](http://en.wikipedia.org/wiki/Document-term_matrix)와 함께, `cosine distance`는 도큐먼트간의 유사도(=distance)를 측정하기 위해 일반적으로 사용된다.
 
@@ -46,7 +46,7 @@ $$cosine~similarity = \dfrac{AB}{|A||B|}$$
 
 categorical value는 순서가 없기 때문에, 우리는 오직 categorical value가 같은지 아닌지만 측정할 수 있다. 기본적으로 attribute value가 겹치는 정도를 측정한다. `Hamming distance`는 두 데이터 포인트가 서로 매치되려면 얼마나 많은 attribute가 바뀌어야 하는지를 측정한다. 두 데이터포인트의 유사도를 결정하기 위해 `simple matching coefficient`를 사용할 수 있다.
 
-$$simple~matching~coefficient = \dfrac{\\#(Match Attributes)}{\\#(Attributes)}$$
+<div>$$simple~matching~coefficient = \dfrac{\\#(Match Attributes)}{\\#(Attributes)}$$</div>
 
 (# = number of)
 
@@ -54,7 +54,7 @@ $$simple~matching~coefficient = \dfrac{\\#(Match Attributes)}{\\#(Attributes)}$$
 
 그러나, 데이터 포인트가 비대칭 바이너리 데이터 attribute를 가지고 있다면, 어떤 value의 equality는 더이상 의미가 없다. 예를 들어, 데이터 포인트가 유저를 나타내고 attribute가 각 영화를 나태낸다고 해보자(즉 각 row가 유저이고 column이 영화가 된다). 그리고 1이 yes, 0가 no라고 하자. 대부분의 유저들이 전체 영화의 양에 비하면 굉장히 적은 양의 영화를 보았다는 점을 고려하면, 두 유저가 둘다 어떤 영화를 보지 않았다는 것이(즉 value가 둘다 0이라는 것이) 두 유저가 유사하다는 것을 의미하지는 않는다. 반면에 두 유저가 같은 영화를 보았다면(즉 value가 둘다 1이라면), 이는 두 유저가 매우 유사하다는 것을 의미한다. 이러한 경우에, 둘 다 1이라는 것은 둘 다 0인 경우에 비해 훨씬 중요하다. 이는 `Jaccard similarity`로 연결된다:
 
-$$jaccard~similarity = \dfrac{|A \cap B|}{|A \cup B|} = \dfrac{\\#(1~In~A~and~B)}{\\#(1~In~A) + \\#(1~In~B) - \\#(1~In~A~and~B)}$$
+<div>$$jaccard~similarity = \dfrac{|A \cap B|}{|A \cup B|} = \dfrac{\\#(1~In~A~and~B)}{\\#(1~In~A) + \\#(1~In~B) - \\#(1~In~A~and~B)}$$</div>
 
 ### etc
 

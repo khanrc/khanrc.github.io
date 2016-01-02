@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "cron, crontab의 개념"
-tags: ['Server(Back-end)']
+tags: ['Web']
 date: 2014-11-06 12:46:00
 ---
 # cron, crontab, anacron

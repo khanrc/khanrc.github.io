@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "LLVM on AOSABOOK"
-tags: ['그 외/Tech']
+tags: ['ETC']
 date: 2015-04-26 20:09:00
 ---
 컴파일러 수업 과제로 아티클을 읽으라고 해서, 이참에 번역이나 해 볼까 하고 신나게 번역하고 있었는데 이미 누가 해 놨더라 -_-

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "git tracking list에서 파일 제거하기"
-tags: ['그 외/Tech']
+tags: ['ETC']
 date: 2015-07-08 19:56:00
 ---
 # git tracking list에서 파일 제거하기

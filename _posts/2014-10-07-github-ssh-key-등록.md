@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "github: ssh key 등록"
-tags: ['그 외/Tech']
+tags: ['ETC']
 date: 2014-10-07 01:00:00
 ---
 # github: ssh key 등록

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Text Mining Tutoral: 20 newsgroups"
-tags: ['DataScience/Text Mining']
+tags: ['Text Mining']
 date: 2015-06-02 11:02:00
 ---
 # Text Mining Tutoral: 20 newsgroups

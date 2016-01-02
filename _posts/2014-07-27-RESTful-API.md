@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "RESTful API"
-tags: ['Server(Back-end)']
+tags: ['Web']
 date: 2014-07-27 13:08:00
 ---
 **API**(Application Programming Interface)

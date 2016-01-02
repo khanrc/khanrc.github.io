@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Front-end Frameworks"
-tags: ['Web(Front-end)']
+tags: ['Web']
 date: 2014-08-10 11:16:00
 ---
 # Front-end
