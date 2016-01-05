@@ -54,11 +54,22 @@ MLE는 주어진 데이터의 통계모델의 파라메터를 추정하는 방�
 
 Neural probabilistic language model은 이전 단어들 $h$ (for "history") 가 주어졌을 때 다음 단어 $w_t$ (for "target") 의 확률을 추정하는 MLE를 통해 학습된다. 이 과정은 softmax function에 기반한다:
 
-<div>$$ \begin{align} P(w_t | h) &amp;= \text{softmax}(\text{score}(w_t, h)) \\\ &amp;= \frac{\exp \\{ \text{score}(w_t, h) \\} } {\sum_\text{Word w' in Vocab} \exp \\{ \text{score}(w', h) \\} }. \end{align} $$</div>
+<div>$$ \begin{align}
+P(w_t | h) &= \text{softmax}(\text{score}(w_t, h)) \\
+           &= \frac{\exp \{ \text{score}(w_t, h) \} }
+             {\sum_\text{Word w' in Vocab} \exp \{ \text{score}(w', h) \} }.
+\end{align} $$</div>
 
 여기서 $\text{score}(w_t, h)$ 는 타겟 단어 $w_t$ 와 컨텍스트 $h$ 의 공존 가능성 (compatibility) 를 계산한다 - 보통 dot product를 쓴다. 이 모델을 학습하기 위해 트레이닝 셋에 대해, log-likelihood를 최대화한다:
 
-<div>$$ \begin{align} J_\text{ML} &amp;= \log P(w_t | h) \\\ &amp;= \text{score}(w_t, h) - \log \left( \sum_\text{Word w' in Vocab} \exp \\{ \text{score}(w', h) \\} \right) \end{align} $$</div>
+<div>
+$$ 
+\begin{align}
+ J_\text{ML} &= \log P(w_t | h) \\
+  &= \text{score}(w_t, h) -
+     \log \left( \sum_\text{Word w' in Vocab} \exp \{ \text{score}(w', h) \} \right)
+\end{align}
+$$ </div>
 
 > 근데 $P(w_t|h)$가 probability (posterior) 아닌가? likelihood면 $P(h|w_t)$ 여야 할 것 같은데…
 
