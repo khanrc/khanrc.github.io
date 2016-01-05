@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Bayesian probability"
+title: "Bayesian probability: MLE, MAP"
 tags: ['DataScience']
 date: 2015-07-01 11:49:00
 ---
