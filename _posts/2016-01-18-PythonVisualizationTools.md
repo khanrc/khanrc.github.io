@@ -39,7 +39,7 @@ tags: ['DataScience', 'Python']
 * [folium](https://github.com/python-visualization/folium)
 	* Map visualization tool. [basemap](http://matplotlib.org/basemap/) 이라는 matplotlib 확장 (extension) 을 사용하면 matplotlib 에서도 지도 기반 시각화를 할 수 있는데. folium 은 interactive map visualization을 지원함.
 	* leaflet.js 의 python wrapper 라고 하는듯.
-* [networkxx](https://github.com/networkx/networkx)
+* [NetworkX](https://github.com/networkx/networkx)
 	* Network visualization tool. [gallery](http://networkx.github.io/documentation/latest/gallery.html) 참고.
 * [vispy](vispy.org)
 	* 홈페이지에 가 보면 엄청 화려한 그래프들을 보여주는데... 사용하기도 까다로울 것 같음. 마찬가지로 interactive.
