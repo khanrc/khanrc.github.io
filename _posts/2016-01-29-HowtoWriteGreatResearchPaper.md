@@ -4,6 +4,8 @@ title: "How to Write a Great Research Paper: Seven simple suggestions"
 tags: ["논문"]
 ---
 
+[How to Write a Great Research Paper](https://www.youtube.com/watch?v=g3dkRsTqdDA&feature=share). MS Research 의 Simon Peyton Jones 교수의 강의.
+
 ## 1. Don't wait: write
 [아이디어 -> 실험 -> 라이팅] 하지 마라.  
 [아이디어 -> 라이팅 -> 실험] 해라!
