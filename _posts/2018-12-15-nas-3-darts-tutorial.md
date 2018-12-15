@@ -6,7 +6,7 @@ date: 2018-12-15 01:00:00
 ---
 
 
-# DARTS: tutorial
+# Tutorial
 
 ## Disclaimer
 
@@ -670,6 +670,14 @@ for epoch in range(config.epochs):
     top1 = validate(valid_loader, model, criterion, epoch, cur_step)
 ```
 
+## RUN
+
+이제 다 되었다. 돌리기만 하면 된다! 아래 그래프는 Fashion-MNIST 에 대한 그래프다. search 그래프인 파란색이 짧은 것은 search 가 epoch 이 더 적기 때문이다.
+
+<img src="{{site.url}}/assets/nas/4-darts-run-train.png">
+
+<img src="{{site.url}}/assets/nas/4-darts-run-val.png">
+
 ## Not covered here
 
 - RNN
@@ -680,11 +688,3 @@ for epoch in range(config.epochs):
   - graphviz 를 사용해서 매 에퐄마다 찾은 구조를 시각화 할 수 있다.
 
 RNN 부분을 제외하면 위 내용을 포함해서 디테일한 부분들은 github repo 에서 확인할 수 있다. RNN 이 궁금하다면 원 저자의 repo 를 참조하자.
-
-## RUN
-
-이제 다 되었다. 돌리기만 하면 된다! 아래 그래프는 Fashion-MNIST 에 대한 그래프다. search 그래프인 파란색이 짧은 것은 search 가 epoch 이 더 적기 때문이다.
-
-<img src="{{site.url}}/assets/nas/4-darts-run-train.png">
-
-<img src="{{site.url}}/assets/nas/4-darts-run-val.png">
