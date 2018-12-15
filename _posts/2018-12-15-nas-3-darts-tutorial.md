@@ -18,7 +18,7 @@ date: 2018-12-15 01:00:00
 
 <img src="{{site.url}}/assets/nas/2-darts-algo.png">
 
-자, 그럼 이제 이걸 구현해 보자. 위 알고리즘 수도코드를 line by line 으로 옮기면:
+위 알고리즘 수도코드를 line by line 으로 옮기면:
 
 1. mixed operation 과 그 가중치 alpha 를 생성
 2. w 를 1-step 학습
@@ -267,7 +267,7 @@ class Architect():
     def compute_hessian(self, dw, trn_X, trn_y):
 ```
 
-architect 는 alpha 의 unrolled gradient 를 계산하기 위한 클래스다. 복잡해 보일 수 있지만 논문에 나온 수식을 충실히 따라가면서 구현하면 된다. unrolled gradient 를 계산하기 위해서 가장 먼저 구해야 할 것이 virtual step $w'$ (1-step forward model) 이다.
+architect 는 alpha 의 unrolled gradient 를 계산하기 위한 클래스다. 복잡해 보일 수 있지만 논문에 나온 수식을 충실히 따라가면서 구현하면 된다. Unrolled gradient 를 계산하기 위해서 가장 먼저 구해야 할 것이 virtual step $w'$ (1-step forward model) 이다.
 
 ```python
 def virtual_step(self, trn_X, trn_y, xi, w_optim):
@@ -330,7 +330,7 @@ def unrolled_backward(self, trn_X, trn_y, val_X, val_y, xi, w_optim):
             alpha.grad = da - xi*h
 ```
 
-virtual step 을 해서 unrolled network (one-step forward model) 를 구했으면 finite difference approximation 을 통해 hessian 을 계산하여 최종 그라디언트를 구해야 한다. 논문을 보면 alpha 와 weights 모두에 대한 validation loss 의 그라디언트가 필요하므로 `backward()` 를 통해 모든 파라메터에 대한 그라디언트를 계산하자. 그리고 헤시안을 계산하고 나면 최종 그라디언트를 계산할 수 있다! `backward()` 함수처럼 `alpha.grad` 에 넣어주자.
+Virtual step 을 해서 unrolled network (one-step forward model) 를 구했으면 finite difference approximation 을 통해 hessian 을 계산하여 최종 그라디언트를 구해야 한다. 논문을 보면 alpha 와 weights 모두에 대한 validation loss 의 그라디언트가 필요하므로 `backward()` 를 통해 모든 파라메터에 대한 그라디언트를 계산하자. 그리고 헤시안을 계산하고 나면 최종 그라디언트를 계산할 수 있다! `backward()` 함수처럼 `alpha.grad` 에 넣어주자.
 
 ```python
 def compute_hessian(self, dw, trn_X, trn_y):
@@ -371,7 +371,7 @@ def compute_hessian(self, dw, trn_X, trn_y):
 
 #### alpha 학습
 
-alpha 의 unrolled gradient 를 계산하는 함수를 만들었으니 업데이트만 해 주면 된다. alpha 는 Adam 으로 학습한다.
+이제 alpha 의 unrolled gradient 를 계산할 수 있으니 파라메터를 업데이트 해 줄 차례다. alpha 는 Adam 으로 학습한다.
 
 ```python
 # alphas optimizer
@@ -389,7 +389,7 @@ for step, ((trn_X, trn_y), (val_X, val_y)) in enumerate(zip(train_loader, valid_
 
 ## 4. Parsing alpha to gene
 
-학습이 충분히 되었으면 이제 continuous relaxation 이 된 우리의 mixed cell 을 다시 discrete 하게 변환해 주는 작업이 필요하다. 모든 연산을 다 갖고 있는 mixed op 를 1개의 연산으로 변환하고, 모든 노드들이 다 연결되어 있는 mixed cell 을 노드당 k개씩만 연결된 셀로 변환해야 한다. k 는 하이퍼파라메터로 지정해주는데, CNN 에서는 k=2 를 사용한다.
+학습이 충분히 되었으면 continuous relaxation 이 된 우리의 mixed cell 을 다시 discrete 하게 변환해 주는 작업이 필요하다. 모든 연산을 다 갖고 있는 mixed op 를 1개의 연산으로 변환하고, 모든 노드들이 다 연결되어 있는 mixed cell 을 노드당 k개씩만 연결된 셀로 변환해야 한다. k 는 하이퍼파라메터로 지정해주는데, CNN 에서는 k=2 를 사용한다.
 
 ```python
 # https://github.com/khanrc/pt.darts/blob/master/genotypes.py
@@ -443,7 +443,7 @@ Augmentation 이라는 용어는 DARTS 논문에서 나오는 용어는 아니�
 
 Lee, Chen-Yu, et al. "Deeply-supervised nets." *Artificial Intelligence and Statistics*. 2015.
 
-인셉션에서도 사용했던 auxiliary loss 다. 네트워크의 중간 지점에 auxiliary head 를 연결하여 auxiliary loss 를 계산한다. 그라디언트를 깊게 잘 흘려보내기 위해 사용한다.
+인셉션에서도 사용했던 auxiliary loss 다. 네트워크의 중간 지점에 auxiliary head 를 연결하여 auxiliary loss 를 계산한다. 그라디언트를 깊게 흘려보내기 위해 사용한다.
 
 ```python
 # https://github.com/khanrc/pt.darts/blob/master/models/augment_cnn.py
@@ -512,7 +512,7 @@ class DropPath_(nn.Module):
 
 위 코드는 데이터 포인트 레벨에서 마스킹을 한다. 즉, 만약 `DropPath_` 가 인풋 데이터에 적용되면 데이터 포인트 하나를 통째로 날려버린다. 이걸 각 path 에 걸어주면 path 를 날리게 된다.
 
-중간에 `drop_path_()` 함수를 보면 마스크를 만들 때 `torch.cuda.FloatTensor()` 함수를 사용해서 바로 gpu 메모리에 올려 버린다. `torch.FloatTensor().to(x.device)` 로 구현하여 cpu 에도 대응이 가능하도록 구현하면 좋겠지만, 퍼포먼스 차이가 많이 나기 때문에 `torch.cuda.FloatTensor` 를 바로 사용하였다. 어차피 본 구현은 gpu 사용을 전제로 해서 문제는 없지만 만약 cpu 용 코드로 변환하고 싶다면 위 부분도 같이 수정해줘야 한다. cpu 에서 돌리는 것은 말리고 싶지만.
+중간에 `drop_path_()` 를 보면 마스크를 만들 때 `torch.cuda.FloatTensor` 를 사용해서 바로 gpu 메모리에 올려 버린다. `torch.FloatTensor().to(x.device)` 로 구현하여 cpu 에도 대응이 가능하도록 구현하면 좋겠지만, 퍼포먼스 차이가 많이 나기 때문에 `torch.cuda.FloatTensor` 를 바로 사용하였다. 어차피 본 구현은 gpu 사용을 전제로 해서 문제는 없지만 만약 cpu 용 코드로 변환하고 싶다면 위 부분도 같이 수정해줘야 한다. cpu 에서 돌리는 것은 말리고 싶지만.
 
 이렇게 만든 `DropPath_` 클래스는 `AugmentCell` 을 만들 때 사용된다.
 
@@ -539,13 +539,13 @@ def to_dag(C_in, gene, reduction):
     return dag
 ```
 
-`AugmentCell` 에서는 위에서 파싱한 gene 을 실제 연산으로 변환한다. gene 관련 함수이므로 genotypes 모듈에 위치하지만 AugmentCell 에서 사용된다. identity 를 제외한 모든 연산에 DropPath를 걸어준다. DARTS 에서 사용하는 DropPath 는 Scheduled drop path 라 하여 계속 드롭 확률이 바뀌기 때문에 초기 드롭 확률은 중요하지 않다.
+`AugmentCell` 에서는 위에서 파싱한 gene 을 실제 연산으로 변환한다. gene 관련 함수이므로 genotypes 모듈에 위치하지만 `AugmentCell` 에서 사용된다. identity 를 제외한 모든 연산에 DropPath를 걸어준다. DARTS 에서 사용하는 DropPath 는 Scheduled drop path 라 하여 계속 드롭 확률이 바뀌기 때문에 초기 드롭 확률은 중요하지 않다.
 
 #### CutOut
 
 DeVries, Terrance, and Graham W. Taylor. "Improved regularization of convolutional neural networks with cutout." *arXiv preprint arXiv:1708.04552* (2017).
 
-Cutout 은 작년에 나온 data augmentation 방법으로 매우 간단하지만 강력한 방법이다. 방법은 정말로 간단한데, 입력 데이터를 적당히 잘라내어 지워버리는 것이다 (cut-out). Cutout 은 darts 저자의 코드를 그대로 사용했다.
+Cutout 은 작년에 나온 data augmentation 방법으로 매우 간단하지만 강력한 방법이다. 방법은 정말로 간단한데, 입력 데이터를 적당히 잘라내어 지워버리는 것이다 (cut-out). Cutout 은 DARTS 저자의 코드를 그대로 사용했다.
 
 ```python
 # https://github.com/khanrc/pt.darts/blob/master/preproc.py
@@ -651,7 +651,7 @@ class AugmentCNN(nn.Module):
                 module.p = p
 ```
 
-앞서 정의해준 AuxiliaryHead 를 붙여주고, 실제로 포워드 시에도 트레이닝 페이즈에서는 auxiliary logits 도 함께 계산해준다. Scheduled drop path 를 위해 모듈의 드롭 확률을 변경해주는 함수도 정의하였다.
+앞서 정의해준 AuxiliaryHead 를 붙여주고, 실제로 포워드 시에도 training 시에는 auxiliary logits 도 함께 계산해준다. Scheduled drop path 를 위해 모듈의 드롭 확률을 변경해주는 함수도 정의하였다.
 
 ```python
 # https://github.com/khanrc/pt.darts/blob/master/augment.py
@@ -672,11 +672,11 @@ for epoch in range(config.epochs):
 
 ## RUN
 
-이제 다 되었다. 돌리기만 하면 된다! 아래 그래프는 Fashion-MNIST 에 대한 그래프다. search 그래프인 파란색이 짧은 것은 search 가 epoch 이 더 적기 때문이다.
-
 <img src="{{site.url}}/assets/nas/4-darts-run-train.png">
 
 <img src="{{site.url}}/assets/nas/4-darts-run-val.png">
+
+Fashion-MNIST 에 대한 TensorBoard 그래프다. 파란색이 search, 회색이 augment 에 해당한다. Search 는 50 epoch 을 돌고, augment 는 300 epoch 을 돌기 때문에 search 가 짧게 나온다.
 
 ## Not covered here
 
