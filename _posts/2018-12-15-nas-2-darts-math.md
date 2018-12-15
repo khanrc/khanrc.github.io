@@ -149,7 +149,7 @@ $$
 \end{align}
 $$
 
-가 되어, 연산 복잡도가 $O(|\alpha||w|)$ 에서 $O(|\alpha|+|w|)$ 로 줄어든다. 또한 여기서 추가로 등장하는 두 하이퍼파라메터 $\xi$ 와 $\epsilon$ 에 대한 실험적인 설정값도 논문에서 (경험적으로) 제공한다. virtual gradient step 의 learning rate 인 $\xi$ 는 $w$ 의 learning rate 와 동일하게 사용하며, 엡실론의 경우 $\epsilon=0.01 / ||\nabla_{w'} L_{val}(w',\alpha)||$ 를 사용한다. 
+가 되어, 연산 복잡도가 $O(\|\alpha\|\|w\|)$ 에서 $O(\|\alpha\|+\|w\|)$ 로 줄어든다. 또한 여기서 추가로 등장하는 두 하이퍼파라메터 $\xi$ 와 $\epsilon$ 에 대한 실험적인 설정값도 논문에서 (경험적으로) 제공한다. virtual gradient step 의 learning rate 인 $\xi$ 는 $w$ 의 learning rate 와 동일하게 사용하며, 엡실론의 경우 $\epsilon=0.01 / \|\|\nabla_{w'} L_{val}(w',\alpha)\|\|$ 를 사용한다. 
 
 그렇다면, 최종적으로 unrolled gradient (virtual step gradient) 식을 정리해 보자.
 
