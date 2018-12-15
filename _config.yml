@@ -7,7 +7,8 @@ name:               "Khanrc"
 description:        "Khanrc's blog"
 
 # URL
-baseurl:            ""
+url:                "http://khanrc.github.io"
+baseurl:            "assets"
 #baseurl:            "" #For Root Domain
 permalink:          /:year/:month/:day/:title.html
 
