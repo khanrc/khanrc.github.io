@@ -8,7 +8,7 @@ description:        "Khanrc's blog"
 
 # URL
 url:                "http://khanrc.github.io"
-baseurl:            "assets"
+baseurl:            ""
 #baseurl:            "" #For Root Domain
 permalink:          /:year/:month/:day/:title.html
 
