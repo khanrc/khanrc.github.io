@@ -269,6 +269,9 @@ class Architect():
 
 architect 는 alpha 의 unrolled gradient 를 계산하기 위한 클래스다. 복잡해 보일 수 있지만 논문에 나온 수식을 충실히 따라가면서 구현하면 된다. Unrolled gradient 를 계산하기 위해서 가장 먼저 구해야 할 것이 virtual step $w'$ (1-step forward model) 이다.
 
+$$w'= w-\xi \nabla_w L_{train}(w,\alpha)$$
+
+
 ```python
 def virtual_step(self, trn_X, trn_y, xi, w_optim):
     """
@@ -305,6 +308,15 @@ def virtual_step(self, trn_X, trn_y, xi, w_optim):
 
 `deepcopy` 를 통해 기존 네트워크를 카피하고, 1 step 학습을 진행한다. `w_optim` 의 optimizer statistics (momentum) 은 변경되면 안 되므로, `optimizer.step()` 을 사용하는 것이 아니라 직접 파라메터들을 업데이트 해 준다. 언뜻 생각하면 `deepcopy` 으로 네트워크를 통째로 카피하는 것보다 virtual net 을 관리하면서 state_dict 만 업데이트 해 주는 것이 빠를 것 같지만 실제로 해 보면 `deepcopy` 가 훨씬 빠르다 (저자는 state_dict 로 구현했는데, 저자의 환경인 pytorch 0.3 에서는 그게 더 빨랐지만 지금은 아니다).
 
+이제 $w'$ 을 구했으니 validation loss 에 대해 그라디언트를 계산하고, 아래의 헤시안 항을 계산하면 unrolled gradient 를 계산할 수 있다.
+
+$$
+\nabla_\alpha\left[ L_{val}(w',\alpha) \right] =
+\nabla_\alpha L_{val}(w',\alpha) 
+- \xi \nabla^2_{\alpha,w} L_{train}(w,\alpha) \nabla_{w'} L_{val} (w', \alpha)
+\tag{6}
+$$
+
 ```python
 def unrolled_backward(self, trn_X, trn_y, val_X, val_y, xi, w_optim):
     """ Compute unrolled loss and backward its gradients
@@ -330,7 +342,20 @@ def unrolled_backward(self, trn_X, trn_y, val_X, val_y, xi, w_optim):
             alpha.grad = da - xi*h
 ```
 
-Virtual step 을 해서 unrolled network (one-step forward model) 를 구했으면 finite difference approximation 을 통해 hessian 을 계산하여 최종 그라디언트를 구해야 한다. 논문을 보면 alpha 와 weights 모두에 대한 validation loss 의 그라디언트가 필요하므로 `backward()` 를 통해 모든 파라메터에 대한 그라디언트를 계산하자. 그리고 헤시안을 계산하고 나면 최종 그라디언트를 계산할 수 있다! `backward()` 함수처럼 `alpha.grad` 에 넣어주자.
+논문을 보면 alpha 와 weights 모두에 대한 validation loss 의 그라디언트가 필요하므로 `backward()` 를 통해 모든 파라메터에 대한 그라디언트를 계산하자. 그리고 헤시안을 계산하고 나면 최종 그라디언트를 계산할 수 있다! `backward()` 함수처럼 `alpha.grad` 에 넣어주자.
+
+이제 마지막으로 헤시안을 계산해보자. 앞선 포스트에서 finite difference approximation 을 통해 근사하는 수식을 유도했다. 
+
+$$
+\begin{align}
+\nabla^2_{\alpha,w} L_{train}(w,\alpha) \nabla_{w'} L_{val} (w', \alpha) &\approx \frac{\nabla_\alpha L_{train}(w^+,\alpha) - \nabla_\alpha L_{train}(w^-,\alpha)}{2\epsilon} \tag{7} \\\\
+\text{where} \quad
+&w^+=w+\epsilon \nabla_{w'} L_{val}(w',\alpha) \\
+&w^-=w-\epsilon \nabla_{w'}L_{val}(w',\alpha) \\
+&\epsilon=\text{small scalar}
+\end{align}
+$$
+
 
 ```python
 def compute_hessian(self, dw, trn_X, trn_y):
@@ -367,7 +392,9 @@ def compute_hessian(self, dw, trn_X, trn_y):
     return hessian
 ```
 
-헤시안도 논문의 수식을 그대로 구현하면 된다. $w^+$ 를 먼저 계산한 다음에 그라디언트를 구하고, $w^-$ 를 계산한 다음 또 그라디언트를 구한다. 네트워크의 가중치는 원래대로 복구해 두고, 헤시안을 계산하여 리턴한다.
+논문의 수식을 그대로 구현하였다. $w^+$ 를 먼저 계산한 다음에 그라디언트를 구하고, $w^-$ 를 계산한 다음 또 그라디언트를 구한다. 네트워크의 가중치는 원래대로 복구해 두고, 헤시안을 계산하여 리턴한다.
+
+> 정확히 말하면 위 값이 헤시안은 아니다. 수식을 유도하는 부분을 보면 헤시안을 우리가 원하는 형태로 변형하는데, 그 변형된 값에 해당한다 (식 7). 이 포스트에서는 편의상 헤시안이라고 부른다.
 
 #### alpha 학습
 
@@ -539,13 +566,13 @@ def to_dag(C_in, gene, reduction):
     return dag
 ```
 
-`AugmentCell` 에서는 위에서 파싱한 gene 을 실제 연산으로 변환한다. gene 관련 함수이므로 genotypes 모듈에 위치하지만 `AugmentCell` 에서 사용된다. identity 를 제외한 모든 연산에 DropPath를 걸어준다. DARTS 에서 사용하는 DropPath 는 Scheduled drop path 라 하여 계속 드롭 확률이 바뀌기 때문에 초기 드롭 확률은 중요하지 않다.
+`AugmentCell` 에서는 위에서 파싱한 gene 을 실제 연산으로 변환한다. gene 관련 함수이므로 genotypes 모듈에 위치하지만 `AugmentCell` 에서 사용된다. identity 를 제외한 모든 연산에 DropPath를 걸어준다. 여기서 사용하는 DropPath 는 scheduled drop path 라 하여 계속 드롭 확률이 바뀌기 때문에 초기 드롭 확률은 중요하지 않다.
 
 #### CutOut
 
 DeVries, Terrance, and Graham W. Taylor. "Improved regularization of convolutional neural networks with cutout." *arXiv preprint arXiv:1708.04552* (2017).
 
-Cutout 은 작년에 나온 data augmentation 방법으로 매우 간단하지만 강력한 방법이다. 방법은 정말로 간단한데, 입력 데이터를 적당히 잘라내어 지워버리는 것이다 (cut-out). Cutout 은 DARTS 저자의 코드를 그대로 사용했다.
+Cutout 은 작년에 나온 data augmentation 방법으로 매우 간단하지만 강력한 방법이다. 방법은 정말로 간단한데, 입력 데이터를 적당히 잘라내어 지워버리는 것이다 (cut-out). Cutout 은 저자의 코드를 그대로 사용했다.
 
 ```python
 # https://github.com/khanrc/pt.darts/blob/master/preproc.py
@@ -679,6 +706,8 @@ for epoch in range(config.epochs):
 Fashion-MNIST 에 대한 TensorBoard 그래프다. 파란색이 search, 회색이 augment 에 해당한다. Search 는 50 epoch 을 돌고, augment 는 300 epoch 을 돌기 때문에 search 가 짧게 나온다.
 
 ## Not covered here
+
+본 튜토리얼에서 다루지 않은 내용이 몇 가지 있다:
 
 - RNN
   - RNN 은 여기서 따로 다루지 않았으며, github repo 에도 RNN 은 구현하지 않았다. 디테일한 부분을 제외하고는 동일하다. 
