@@ -127,25 +127,25 @@ $$
 라 하면,
 
 $$
-f(w) \approx T^{(2)}[f,w]\(x\)
+f(w) \approx T^{(2)}[f,w](x)
 $$
 
 가 x=w 근처에서 성립하고,
 
 $$
 \begin{align}
-T^{(2)}[f, w]\(x\)&=f(w)+\nabla_w f(w)(w-x)+\frac 12 \nabla^2_wf(w) (x-w)^2 \\
+T^{(2)}[f, w](x)&=f(w)+\nabla_w f(w)(w-x)+\frac 12 \nabla^2_wf(w) (x-w)^2 \\
 &=\nabla_\alpha L_{train}(w,\alpha)+\nabla_w\nabla_\alpha L_{train}(w,\alpha)(x-w)+\frac{1}{2}\nabla^2_w\nabla_\alpha L_{train}(w,\alpha)(x-w)^2
 \end{align}
 $$
 
-가 된다. 여기서 이 Taylor series 함수에 $w^+$ 와 $w^-$ 를 넣어 빼주면 $|w^+-w|=|w^- -w|$ 이므로, 첫번째와 세번째 항이 사라진다. 그러면:
+가 된다. 여기서 이 Taylor series 함수에 $w^+$ 와 $w^-$ 를 넣어 빼주면 $\|w^+-w\|=\|w^- -w\|$ 이므로, 첫번째와 세번째 항이 사라진다. 그러면:
 
 $$
 \begin{align}
-T^{(2)}\[\nabla_\alpha L_{train}, w\](w^+)-T^{(2)}\[\nabla_\alpha L_{train}, w\]\(w^-\) 
-&= \nabla_w \nabla_\alpha L_{train}\(w,\alpha\)\(w^+ - w^-\) \\
-&= 2\epsilon \nabla^2_{\alpha,w} L_{train}(w,\alpha) \nabla_{w'} L_{val} \(w', \alpha\)
+T^{(2)}[\nabla_\alpha L_{train}, w](w^+)-T^{(2)}[\nabla_\alpha L_{train}, w](w^-) 
+&= \nabla_w \nabla_\alpha L_{train}(w,\alpha)(w^+ - w^-) \\
+&= 2\epsilon \nabla^2_{\alpha,w} L_{train}(w,\alpha) \nabla_{w'} L_{val} (w', \alpha)
 \end{align}
 $$
 
