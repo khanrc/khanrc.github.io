@@ -35,23 +35,30 @@ $$
 \frac{\partial f}{\partial y}\frac{\partial y}{\partial t}
 $$
 
-### Finite Difference Approximation of Derivatives
+### Taylor Series
 
-Finite difference 는 사실 그냥 numerical gradient 다. 미분의 정의에 의해
-
+임의의 함수 $f(x)$ 가 $x=a$ 에서 무한 번 미분 가능하다면,
 $$
-\nabla_xf=\lim_{h \rightarrow 0} \frac{f(x+h)-f(x-h)}{2h}
+\begin{align}
+f(x)&=f(a)+f'(a)(x-a)+\frac{f''(a)}{2!}(x-a)^2+\cdots \\
+&=\sum^\infty_{k=0} \frac{f^{(k)}(a)}{k!}(x-a)^k
+\end{align}
 $$
+가 $x=a$ 근처에서 성립한다.
 
-가 되는데, 여기서 limit 를 빼고 작은 h 에 대해 계산하여 이 값을 근사할 수 있다.
+#### Intuition
 
+테일러 급수로 근사한 식을 p(x) 라 한다면 ($f(x)=p_\infty(x)$), $f'(a)=p'(a)$, $f''(a)=p''(a)$, ... 이 성립한다. 즉, 테일러 급수는 x=a 에서 동일한 미분계수를 갖는 함수로 근사하는 방법. [위키](https://en.wikipedia.org/wiki/Taylor_series)를 참고하면 실제로 근사가 진행되면서 (고차 미분이 더해지면서) 점점 정확해지는 것을 볼 수 있다.
+
+#### Multivariable function
+
+위 식을 다변수 함수로 확장하면, n차 테일러 급수는:
 $$
-\nabla_x f \approx \frac{f(x+h)-f(x-h)}{2h}
+T^{(n)}[\mathbf{f}, \mathbf{a}](\mathbf x)=\sum_{k=0}^n\frac{(\partial^k_\mathbf x \mathbf f)(\mathbf a)}{k!}(\mathbf x - \mathbf a)^k
 $$
+라 쓸 수 있다. 
 
-이를 centered difference 라 하고, f(x+h)-f(x) 로 계산하면 forward difference, f(x)-f(x-h) 로 계산하면 backward difference 라 한다.
-
-이 근사의 에러를 계산하기 위해 테일러 급수를 활용할 수 있는데, 이 부분은 위 링크를 참조하자.
+> 위 식은 [임성빈 박사님의 포스트](https://www.facebook.com/sungbin87/posts/2109315539093116) 와 [Taylor series for multivariable function](https://www.researchgate.net/publication/286625914_Taylor_Series_For_Multi-Variable_Functions) 의 내용을 적당히 버무렸다. 혹시 위 수식이 정확히 어떻게 계산되는지가 헷갈린다면, Taylor series for multivariable function 문서에 상세히 나와 있으니 참고하자.
 
 ## Unrolled gradient
 
@@ -103,37 +110,38 @@ $$
 
 ### Hessian term - eq (7)
 
-헤시안 항을 근사하는 부분이 어려워 보이지만 별 거 없다. Centered finite difference 식
-
-$$
-\nabla_x f(x) \approx \frac{f(x+h)-f(x+h)}{2h}
-$$
-
-
-에서 각각 
-
-$$
-\begin{align}
-f &\leftarrow \nabla_\alpha L_{train}(w,\alpha) \\
-x &\leftarrow w \\
-h &\leftarrow \epsilon \nabla_{w'} L_{val}(w',\alpha) \\
-\end{align}
-$$
-
-를 대입하면:
-
-$$
-\nabla_w \left[ \nabla_\alpha L_{train}(w,a) \right]
-\approx \frac{\nabla_\alpha L_{train}(w^+,a)-\nabla_\alpha L_{train}(w^-,a)}{2\epsilon \nabla_{w'} L_{val}(w',\alpha)}
-$$
-
-가 된다. 여기서 양변에 $\nabla_{w'} L_{val}(w',\alpha)$ 를 곱해주면:
-
+식 (7) 로부터 시작하자:
 $$
 \nabla^2_{\alpha,w} L_{train}(w,\alpha) \nabla_{w'} L_{val} (w', \alpha) \approx \frac{\nabla_\alpha L_{train}(w^+,\alpha) - \nabla_\alpha L_{train}(w^-,\alpha)}{2\epsilon}
 $$
+여기서 오른쪽의 분자 항을 테일러 시리즈로 근사할 수 있다. 그러면 이 때
+$$
+f(w)= \nabla_\alpha L_{train}(w,\alpha)
+$$
+라 하면,
+$$
+f(w) \approx T^{(2)}[f,w](x)
+$$
+가 x=w 근처에서 성립하고,
+$$
+\begin{align}
+T^{(2)}[f, w](x)&=f(w)+\nabla_w f(w)(w-x)+\frac 12 \nabla^2_wf(w) (x-w)^2 \\
+&=\nabla_\alpha L_{train}(w,\alpha)+\nabla_w\nabla_\alpha L_{train}(w,\alpha)(x-w)+\frac{1}{2}\nabla^2_w\nabla_\alpha L_{train}(w,\alpha)(x-w)^2
+\end{align}
+$$
+가 된다. 여기서 이 Taylor series 함수에 $w^+$ 와 $w^-$ 를 넣어 빼주면 $|w^+-w|=|w^- -w|$ 이므로, 첫번째와 세번째 항이 사라진다. 그러면:
+$$
+\begin{align}
+T^{(2)}[\nabla_\alpha L_{train}, w](w^+)-T^{(2)}[\nabla_\alpha L_{train}, w](w^-) 
+&= \nabla_w \nabla_\alpha L_{train}(w,\alpha)(w^+ - w^-) \\
+&= 2\epsilon \nabla^2_{\alpha,w} L_{train}(w,\alpha) \nabla_{w'} L_{val} (w', \alpha)
+\end{align}
+$$
+이므로 식 (7) 을 얻을 수 있다. 마지막 전개는 $w^+ - w^- = 2\epsilon \nabla_{w'} L_{val}(w',\alpha)$ 이기 때문이다.
 
-즉 식 (7) 이 나온다! 즉, 그냥 finite difference approximation 을 수행하되, 우리가 원하는 형태로 나오도록 h 의 값을 맞춰준 것 뿐이다.
+> 세번째 항 끼리 뺄 때 중간에 Hessian 이 들어가서 다소 복잡하지만 잘 풀어서 빼 보면 사라지는 것을 확인할 수 있다.
+
+가 되어 식 (7) 을 얻을 수 있다!
 
 ## Reference
 
