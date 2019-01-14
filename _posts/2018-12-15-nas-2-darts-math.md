@@ -105,7 +105,7 @@ $$
 이제 전부 다 넣어서 풀면 다음과 같다:
 
 $$
-\nabla_\alpha L_{val}(w',\alpha) - \frac{\nabla_\alpha L_{train}(w+\epsilon \nabla_{w'} L_{val}(w',\alpha),\alpha) - \nabla_\alpha L_{train}(w-\epsilon \nabla_{w'} L_{val}(w',\alpha),\alpha)}{2*0.01 / ||\nabla_{w'} L_{val}(w',\alpha)||}
+\nabla_\alpha L_{val}(w',\alpha) - \frac{\nabla_\alpha L_{train}(w+\epsilon \nabla_{w'} L_{val}(w',\alpha),\alpha) - \nabla_\alpha L_{train}(w-\epsilon \nabla_{w'} L_{val}(w',\alpha),\alpha)}{2\*0.01 / ||\nabla_{w'} L_{val}(w',\alpha)||}
 $$
 
 ### Hessian term - eq (7)
@@ -127,14 +127,14 @@ $$
 라 하면,
 
 $$
-f(w) \approx T^{(2)}[f,w](x)
+f(w) \approx T^{(2)}[f,w]\(x\)
 $$
 
 가 x=w 근처에서 성립하고,
 
 $$
 \begin{align}
-T^{(2)}[f, w](x)&=f(w)+\nabla_w f(w)(w-x)+\frac 12 \nabla^2_wf(w) (x-w)^2 \\
+T^{(2)}[f, w]\(x\)&=f(w)+\nabla_w f(w)(w-x)+\frac 12 \nabla^2_wf(w) (x-w)^2 \\
 &=\nabla_\alpha L_{train}(w,\alpha)+\nabla_w\nabla_\alpha L_{train}(w,\alpha)(x-w)+\frac{1}{2}\nabla^2_w\nabla_\alpha L_{train}(w,\alpha)(x-w)^2
 \end{align}
 $$
@@ -143,9 +143,9 @@ $$
 
 $$
 \begin{align}
-T^{(2)}[\nabla_\alpha L_{train}, w](w^+)-T^{(2)}[\nabla_\alpha L_{train}, w](w^-) 
-&= \nabla_w \nabla_\alpha L_{train}(w,\alpha)(w^+ - w^-) \\
-&= 2\epsilon \nabla^2_{\alpha,w} L_{train}(w,\alpha) \nabla_{w'} L_{val} (w', \alpha)
+T^{(2)}\[\nabla_\alpha L_{train}, w\](w^+)-T^{(2)}\[\nabla_\alpha L_{train}, w\]\(w^-\) 
+&= \nabla_w \nabla_\alpha L_{train}\(w,\alpha\)\(w^+ - w^-\) \\
+&= 2\epsilon \nabla^2_{\alpha,w} L_{train}(w,\alpha) \nabla_{w'} L_{val} \(w', \alpha\)
 \end{align}
 $$
 
