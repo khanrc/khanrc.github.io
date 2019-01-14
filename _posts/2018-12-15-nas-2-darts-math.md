@@ -110,26 +110,37 @@ $$
 
 ### Hessian term - eq (7)
 
+> [임성빈 박사님의 포스트](https://www.facebook.com/sungbin87/posts/2109315539093116)를 상당 부분 참조하여 작성
+
 식 (7) 로부터 시작하자:
+
 $$
 \nabla^2_{\alpha,w} L_{train}(w,\alpha) \nabla_{w'} L_{val} (w', \alpha) \approx \frac{\nabla_\alpha L_{train}(w^+,\alpha) - \nabla_\alpha L_{train}(w^-,\alpha)}{2\epsilon}
 $$
+
 여기서 오른쪽의 분자 항을 테일러 시리즈로 근사할 수 있다. 그러면 이 때
+
 $$
 f(w)= \nabla_\alpha L_{train}(w,\alpha)
 $$
+
 라 하면,
+
 $$
 f(w) \approx T^{(2)}[f,w](x)
 $$
+
 가 x=w 근처에서 성립하고,
+
 $$
 \begin{align}
 T^{(2)}[f, w](x)&=f(w)+\nabla_w f(w)(w-x)+\frac 12 \nabla^2_wf(w) (x-w)^2 \\
 &=\nabla_\alpha L_{train}(w,\alpha)+\nabla_w\nabla_\alpha L_{train}(w,\alpha)(x-w)+\frac{1}{2}\nabla^2_w\nabla_\alpha L_{train}(w,\alpha)(x-w)^2
 \end{align}
 $$
+
 가 된다. 여기서 이 Taylor series 함수에 $w^+$ 와 $w^-$ 를 넣어 빼주면 $|w^+-w|=|w^- -w|$ 이므로, 첫번째와 세번째 항이 사라진다. 그러면:
+
 $$
 \begin{align}
 T^{(2)}[\nabla_\alpha L_{train}, w](w^+)-T^{(2)}[\nabla_\alpha L_{train}, w](w^-) 
@@ -137,11 +148,10 @@ T^{(2)}[\nabla_\alpha L_{train}, w](w^+)-T^{(2)}[\nabla_\alpha L_{train}, w](w^-
 &= 2\epsilon \nabla^2_{\alpha,w} L_{train}(w,\alpha) \nabla_{w'} L_{val} (w', \alpha)
 \end{align}
 $$
+
 이므로 식 (7) 을 얻을 수 있다. 마지막 전개는 $w^+ - w^- = 2\epsilon \nabla_{w'} L_{val}(w',\alpha)$ 이기 때문이다.
 
 > 세번째 항 끼리 뺄 때 중간에 Hessian 이 들어가서 다소 복잡하지만 잘 풀어서 빼 보면 사라지는 것을 확인할 수 있다.
-
-가 되어 식 (7) 을 얻을 수 있다!
 
 ## Reference
 
