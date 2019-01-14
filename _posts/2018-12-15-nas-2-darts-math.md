@@ -38,12 +38,14 @@ $$
 ### Taylor Series
 
 임의의 함수 $f(x)$ 가 $x=a$ 에서 무한 번 미분 가능하다면,
+
 $$
 \begin{align}
 f(x)&=f(a)+f'(a)(x-a)+\frac{f''(a)}{2!}(x-a)^2+\cdots \\
 &=\sum^\infty_{k=0} \frac{f^{(k)}(a)}{k!}(x-a)^k
 \end{align}
 $$
+
 가 $x=a$ 근처에서 성립한다.
 
 #### Intuition
@@ -53,9 +55,11 @@ $$
 #### Multivariable function
 
 위 식을 다변수 함수로 확장하면, n차 테일러 급수는:
+
 $$
 T^{(n)}[\mathbf{f}, \mathbf{a}](\mathbf x)=\sum_{k=0}^n\frac{(\partial^k_\mathbf x \mathbf f)(\mathbf a)}{k!}(\mathbf x - \mathbf a)^k
 $$
+
 라 쓸 수 있다. 
 
 > 위 식은 [임성빈 박사님의 포스트](https://www.facebook.com/sungbin87/posts/2109315539093116) 와 [Taylor series for multivariable function](https://www.researchgate.net/publication/286625914_Taylor_Series_For_Multi-Variable_Functions) 의 내용을 적당히 버무렸다. 혹시 위 수식이 정확히 어떻게 계산되는지가 헷갈린다면, Taylor series for multivariable function 문서에 상세히 나와 있으니 참고하자.
