@@ -62,7 +62,7 @@ $$
 
 라 쓸 수 있다. 
 
-> 위 식은 [임성빈 박사님의 포스트](https://www.facebook.com/sungbin87/posts/2109315539093116) 와 [Taylor series for multivariable function](https://www.researchgate.net/publication/286625914_Taylor_Series_For_Multi-Variable_Functions) 의 내용을 적당히 버무렸다. 혹시 위 수식이 정확히 어떻게 계산되는지가 헷갈린다면, Taylor series for multivariable function 문서에 상세히 나와 있으니 참고하자.
+> 위 식은 [임성빈 박사님의 포스트](https://www.facebook.com/sungbin87/posts/2109315539093116)에서 가져왔지만 n차 표기는 내 마음대로 덧붙였다. 수학적 convention 이 아니니 주의하자.
 
 ## Unrolled gradient
 
@@ -157,9 +157,12 @@ $$
 
 > 세번째 항 끼리 뺄 때 중간에 Hessian 이 들어가서 다소 복잡하지만 잘 풀어서 빼 보면 사라지는 것을 확인할 수 있다.
 
-## Reference
+## References
 
 - https://www.facebook.com/sungbin87/posts/2109315539093116
 - https://www.khanacademy.org/math/multivariable-calculus/multivariable-derivatives/differentiating-vector-valued-functions/a/multivariable-chain-rule-simple-version
 - https://www.rose-hulman.edu/~bryan/lottamath/diffgrad.pdf
 - https://www.geophysik.uni-muenchen.de/~igel/Lectures/NMG/02_finite_differences.pdf
+- https://www.researchgate.net/publication/286625914_Taylor_Series_For_Multi-Variable_Functions
+- http://www.math.ucdenver.edu/~esulliva/Calculus3/Taylor.pdf
+- https://www.khanacademy.org/math/multivariable-calculus/multivariable-derivatives/partial-derivative-and-gradient-articles/a/second-partial-derivatives
