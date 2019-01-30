@@ -12,16 +12,16 @@ baseurl:            ""
 #baseurl:            "" #For Root Domain
 permalink:          /:year/:month/:day/:title.html
 
-# markdown: kramdown
+markdown: kramdown
 
-# kramdown:
-#   input: GFM
+kramdown:
+  input: GFM
 
-markdown: redcarpet
-markdown_ext:  markdown,mkdown,mkdn,mkd,md
+# markdown: redcarpet
+# markdown_ext:  markdown,mkdown,mkdn,mkd,md
 
-redcarpet:
-  extensions: ["tables", "autolink", "strikethrough", "space_after_headers", "with_toc_data", "fenced_code_blocks", "no_intra_emphasis", "footnotes"]
+# redcarpet:
+#   extensions: ["tables", "autolink", "strikethrough", "space_after_headers", "with_toc_data", "fenced_code_blocks", "no_intra_emphasis", "footnotes"]
 
 # Navigation
 nav:
