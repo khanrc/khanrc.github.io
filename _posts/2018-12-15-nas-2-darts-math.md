@@ -109,7 +109,7 @@ $$
 이제 전부 다 넣어서 풀면 다음과 같다:
 
 $$
-\nabla_\alpha L_{val}(w',\alpha) - \frac{\nabla_\alpha L_{train}(w+\epsilon \nabla_{w'} L_{val}(w',\alpha),\alpha) - \nabla_\alpha L_{train}(w-\epsilon \nabla_{w'} L_{val}(w',\alpha),\alpha)}{2*0.01 / ||\nabla_{w'} L_{val}(w',\alpha)||}
+\nabla_\alpha L_{val}(w',\alpha) - \frac{\nabla_\alpha L_{train}(w+\epsilon \nabla_{w'} L_{val}(w',\alpha),\alpha) - \nabla_\alpha L_{train}(w-\epsilon \nabla_{w'} L_{val}(w',\alpha),\alpha)}{2 \cdot 0.01 / ||\nabla_{w'} L_{val}(w',\alpha)||}
 $$
 
 ### Hessian term - eq (7)
@@ -159,10 +159,10 @@ $$
 
 ## References
 
-- https://www.facebook.com/sungbin87/posts/2109315539093116
-- https://www.khanacademy.org/math/multivariable-calculus/multivariable-derivatives/differentiating-vector-valued-functions/a/multivariable-chain-rule-simple-version
-- https://www.rose-hulman.edu/~bryan/lottamath/diffgrad.pdf
-- https://www.geophysik.uni-muenchen.de/~igel/Lectures/NMG/02_finite_differences.pdf
-- https://www.researchgate.net/publication/286625914_Taylor_Series_For_Multi-Variable_Functions
-- http://www.math.ucdenver.edu/~esulliva/Calculus3/Taylor.pdf
-- https://www.khanacademy.org/math/multivariable-calculus/multivariable-derivatives/partial-derivative-and-gradient-articles/a/second-partial-derivatives
+- <https://www.facebook.com/sungbin87/posts/2109315539093116>
+- <https://www.khanacademy.org/math/multivariable-calculus/multivariable-derivatives/differentiating-vector-valued-functions/a/multivariable-chain-rule-simple-version>
+- <https://www.rose-hulman.edu/~bryan/lottamath/diffgrad.pdf>
+- <https://www.geophysik.uni-muenchen.de/~igel/Lectures/NMG/02_finite_differences.pdf>
+- <https://www.researchgate.net/publication/286625914_Taylor_Series_For_Multi-Variable_Functions>
+- <http://www.math.ucdenver.edu/~esulliva/Calculus3/Taylor.pdf>
+- <https://www.khanacademy.org/math/multivariable-calculus/multivariable-derivatives/partial-derivative-and-gradient-articles/a/second-partial-derivatives>
