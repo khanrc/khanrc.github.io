@@ -14,6 +14,8 @@ date: 2018-12-15 01:00:00
 - DARTS 는 퍼포먼스 (속도) 가 중요한 논문이라서 최대한 readability 를 고려하여 구현하였으나 퍼포먼스 이슈로 조금 복잡한 부분들이 존재한다.
 - [원 저자의 코드](https://github.com/quark0/darts)를 많이 참조하였다.
 
+본 글은 **[0.1 version](https://github.com/khanrc/pt.darts/tree/0.1) 을 기준으로 작성**되었음. 현재 마스터 브랜치의 최신 코드와는 일부 다를 수 있음.
+
 ## Overview
 
 <img src="{{site.url}}/assets/nas/2-darts-algo.png">
@@ -34,7 +36,7 @@ Mixed op 는 모든 후보 연산들이 믹스되어 있는 연산이다. 이 mi
 Mixed op 를 생성하기 전에 먼저 후보 연산들을 정의해야 한다.
 
 ```python
-# https://github.com/khanrc/pt.darts/blob/master/genotypes.py
+# https://github.com/khanrc/pt.darts/blob/0.1/genotypes.py
 PRIMITIVES = [
     'max_pool_3x3',
     'avg_pool_3x3',
@@ -50,7 +52,7 @@ PRIMITIVES = [
 이 모든 후보 연산들을 전부 갖는 mixed op 를 생성한다.
 
 ```python
-# https://github.com/khanrc/pt.darts/blob/master/models/ops.py
+# https://github.com/khanrc/pt.darts/blob/0.1/models/ops.py
 class MixedOp(nn.Module):
     """ Mixed operation """
     def __init__(self, C, stride):
@@ -76,7 +78,7 @@ class MixedOp(nn.Module):
 각 셀은 여러 mixed op 를 노드로 하는 DAG 로 구성된다. `reduction` 인자를 받아서 해당 셀이 reduction cell 인지 normal cell 인지 구분해 주자. reduction cell 인 경우에는 인풋과 연결된 연산들은 stride = 2 가 된다.
 
 ```python
-# https://github.com/khanrc/pt.darts/blob/master/models/search_cells.py
+# https://github.com/khanrc/pt.darts/blob/0.1/models/search_cells.py
 class SearchCell(nn.Module):
     """ Cell for search
     Each edge is mixed and continuous relaxed.
@@ -124,7 +126,7 @@ class SearchCell(nn.Module):
 먼저 네트워크의 구조를 정의해주자. 특별한 부분은 없고, 전체의 1/3 지점과 2/3 지점에 reduction cell 을 넣어준다.
 
 ```python
-# https://github.com/khanrc/pt.darts/blob/master/models/search_cnn.py
+# https://github.com/khanrc/pt.darts/blob/0.1/models/search_cnn.py
 class SearchCNN(nn.Module):
     """ Search CNN model """
     def __init__(self, C_in, C, n_classes, n_layers, criterion, n_nodes=4, stem_multiplier=3):
@@ -178,7 +180,7 @@ class SearchCNN(nn.Module):
 모든 셀이 동일한 alpha 를 가지므로, 네트워크가 관리하는 것이 좋다. 네트워크는 alpha 를 파라메터로 갖는다. 아래 코드는 `SearchCNN` 에서 alpha 를 관리하는 부분이다. alpha 와 weights 를 구분하여 관리하고, 포워드 시에도 softmax(alpha) 를 통해 각 연산의 가중치를 계산하여 넣어준다.
 
 ```python
-# https://github.com/khanrc/pt.darts/blob/master/models/search_cnn.py
+# https://github.com/khanrc/pt.darts/blob/0.1/models/search_cnn.py
 class SearchCNN(nn.Module):
     """ Search CNN model """
     def _init_alphas(self):
@@ -231,7 +233,7 @@ class SearchCNN(nn.Module):
 child network weight 를 학습하는 것은 일반적인 학습과 다를 바가 없다. Optimizer 에게 alpha 를 제외하고 w 만 지정하여 넘겨줘야 하는 점만 주의하자.
 
 ```python
-# https://github.com/khanrc/pt.darts/blob/master/search.py
+# https://github.com/khanrc/pt.darts/blob/0.1/search.py
 # weights optimizer
 w_optim = torch.optim.SGD(model.weights(), config.w_lr, momentum=config.w_momentum,
                           weight_decay=config.w_weight_decay)
@@ -254,7 +256,7 @@ for step, ((trn_X, trn_y), (val_X, val_y)) in enumerate(zip(train_loader, valid_
 ### Unrolled gradient 계산
 
 ```python
-# https://github.com/khanrc/pt.darts/blob/master/architect.py
+# https://github.com/khanrc/pt.darts/blob/0.1/architect.py
 class Architect():
     """ Compute gradients of alphas """
     def __init__(self, net, w_momentum, w_weight_decay):
@@ -419,7 +421,7 @@ for step, ((trn_X, trn_y), (val_X, val_y)) in enumerate(zip(train_loader, valid_
 학습이 충분히 되었으면 continuous relaxation 이 된 우리의 mixed cell 을 다시 discrete 하게 변환해 주는 작업이 필요하다. 모든 연산을 다 갖고 있는 mixed op 를 1개의 연산으로 변환하고, 모든 노드들이 다 연결되어 있는 mixed cell 을 노드당 k개씩만 연결된 셀로 변환해야 한다. k 는 하이퍼파라메터로 지정해주는데, CNN 에서는 k=2 를 사용한다.
 
 ```python
-# https://github.com/khanrc/pt.darts/blob/master/genotypes.py
+# https://github.com/khanrc/pt.darts/blob/0.1/genotypes.py
 def parse(alpha, k):
     """
     parse continuous alpha to discrete gene.
@@ -473,7 +475,7 @@ Lee, Chen-Yu, et al. "Deeply-supervised nets." *Artificial Intelligence and Stat
 인셉션에서도 사용했던 auxiliary loss 다. 네트워크의 중간 지점에 auxiliary head 를 연결하여 auxiliary loss 를 계산한다. 그라디언트를 깊게 흘려보내기 위해 사용한다.
 
 ```python
-# https://github.com/khanrc/pt.darts/blob/master/models/augment_cnn.py
+# https://github.com/khanrc/pt.darts/blob/0.1/models/augment_cnn.py
 class AuxiliaryHead(nn.Module):
     """ Auxiliary head in 2/3 place of network to let the gradient flow well """
     def __init__(self, input_size, C, n_classes):
@@ -508,7 +510,7 @@ Larsson, Gustav, Michael Maire, and Gregory Shakhnarovich. "Fractalnet: Ultra-de
 Dropout 의 확장판 같은 방법으로, 연산의 유닛을 드롭하는 dropout 을 path 레벨에서 적용한다.
 
 ```python
-# https://github.com/khanrc/pt.darts/blob/master/models/ops.py
+# https://github.com/khanrc/pt.darts/blob/0.1/models/ops.py
 def drop_path_(x, drop_prob, training):
     if training and drop_prob > 0.:
         keep_prob = 1. - drop_prob
@@ -544,7 +546,7 @@ class DropPath_(nn.Module):
 이렇게 만든 `DropPath_` 클래스는 `AugmentCell` 을 만들 때 사용된다.
 
 ```python
-# https://github.com/khanrc/pt.darts/blob/master/genotypes.py
+# https://github.com/khanrc/pt.darts/blob/0.1/genotypes.py
 def to_dag(C_in, gene, reduction):
     """ generate discrete ops from gene """
     dag = nn.ModuleList()
@@ -575,7 +577,7 @@ DeVries, Terrance, and Graham W. Taylor. "Improved regularization of convolution
 Cutout 은 작년에 나온 data augmentation 방법으로 매우 간단하지만 강력한 방법이다. 방법은 정말로 간단한데, 입력 데이터를 적당히 잘라내어 지워버리는 것이다 (cut-out). Cutout 은 저자의 코드를 그대로 사용했다.
 
 ```python
-# https://github.com/khanrc/pt.darts/blob/master/preproc.py
+# https://github.com/khanrc/pt.darts/blob/0.1/preproc.py
 class Cutout(object):
     def __init__(self, length):
         self.length = length
@@ -606,7 +608,7 @@ Data augmentation 으로는 cutout 외에도 horizontal flip 과 [-4, 4] transla
 이제 위 기법들을 적용해서 학습하면 된다. 일반적인 네트워크 학습과 다를 바 없다.
 
 ```python
-# https://github.com/khanrc/pt.darts/blob/master/models/augment_cnn.py
+# https://github.com/khanrc/pt.darts/blob/0.1/models/augment_cnn.py
 class AugmentCNN(nn.Module):
     """ Augmented CNN model """
     def __init__(self, input_size, C_in, C, n_classes, n_layers, auxiliary, genotype,
@@ -681,7 +683,7 @@ class AugmentCNN(nn.Module):
 앞서 정의해준 AuxiliaryHead 를 붙여주고, 실제로 포워드 시에도 training 시에는 auxiliary logits 도 함께 계산해준다. Scheduled drop path 를 위해 모듈의 드롭 확률을 변경해주는 함수도 정의하였다.
 
 ```python
-# https://github.com/khanrc/pt.darts/blob/master/augment.py
+# https://github.com/khanrc/pt.darts/blob/0.1/augment.py
 # training loop
 for epoch in range(config.epochs):
     lr_scheduler.step()
