@@ -12,7 +12,7 @@ date: 2018-12-15 01:00:00
 
 이전 글에서 gradient-based method 로 darts 를 소개했다. 그러면 NAS 를 gradient 기반으로 학습하려면 어떻게 해야 할까? 지금까지 gradient 를 쓰지 못했던 것은 objective function 이 non-differentiable 했기 때문이었다. 그렇다면 이걸 어떻게 해야 differentiable 하게 만들 수 있을까?
 
-가장 먼저 objective function 을 validaton accuracy 에서 validation loss 로 바꾸자. Accuracy 는 메저 자체가 non-differentiable 이므로 적합하지 않다. 그러면 validation loss 에 대해 controller parameters 가 미분 가능하면 된다. 당연한 얘기지만 우리가 만드는 child network 는 미분 가능하다. 그럼 뭐가 문제인가? controller 가 child network 를 만들어내는 과정이 문제인 것이다. RNN controller 를 사용하는 RL 기반 방법론들을 생각해보자. RNN 이 네트워크의 구조를 하나씩 생성한다. 이대로 child network 가 만들어지고 학습된다. 이 RNN output 이 child network 가 되는 과정이 non-differentiable 하기 때문에 gradient 기반 학습이 불가능하다. 
+가장 먼저 objective function 을 validaton accuracy 에서 validation loss 로 바꾸자. Accuracy 는 measure 자체가 non-differentiable 이므로 적합하지 않다. 그러면 validation loss 에 대해 controller parameters 가 미분 가능하면 된다. 당연한 얘기지만 우리가 만드는 child network 는 미분 가능하다. 그럼 뭐가 문제인가? controller 가 child network 를 만들어내는 과정이 문제인 것이다. RNN controller 를 사용하는 RL 기반 방법론들을 생각해보자. RNN 이 네트워크의 구조를 하나씩 생성한다. 이대로 child network 가 만들어지고 학습된다. 이 RNN output 이 child network 가 되는 과정이 non-differentiable 하기 때문에 gradient 기반 학습이 불가능하다. 
 
 ## Continuous relaxation
 
@@ -46,7 +46,7 @@ GAN 을 아는 사람이라면 이 부분이 GAN 과 유사하다는 것을 느�
 
 이제 GAN 처럼 1-step 씩 학습을 수행한다. Training 데이터셋에 대해 $w$ 를 먼저 최적화하고, validation 데이터셋에 대해 $\alpha$ 를 학습한다. 이 과정을 수렴할때까지 반복한 후, 마지막으로 가중치가 높은 파라메터들을 골라 실제 구조를 정한다.
 
-그런데 잘 보면 $L_{val}$ 을 최적화하는 식이 좀 이상하다. 이는 approximation 을 조금 더 정확하게 하기 위해 gradient unrolling 을 하기 때문이다. Unrolled GAN 을 아는 사람이라면 이 식을 이해하기 조금 더 쉬울 텐데, $\alpha$ 의 그라디언트를 계산할 때 바로 하는 것이 아니라, 1-step 더 가상으로 이동시킨 child network weight $w​$ 를 계산한다. 원래대로라면 optimal $w^\*$ 에 대해 계산해야 하는 것이기 때문에 조금이라도 그에 가깝게 만들어주기 위해서 1-step 을 가상으로 이동시킨다.
+그런데 잘 보면 $L_{val}$ 을 최적화하는 식이 좀 이상하다. 이는 approximation 을 조금 더 정확하게 하기 위해 gradient unrolling 을 하기 때문이다. $\alpha$ 의 그라디언트를 계산할 때 바로 하는 것이 아니라, 1-step 더 가상으로 이동시킨 child network weight $w​$ 를 계산한다. 원래대로라면 optimal $w^\*$ 에 대해 계산해야 하는 것이기 때문에 조금이라도 그에 가깝게 만들어주기 위해서 1-step 을 가상으로 이동시킨다.
 
 <img src="{{site.url}}/assets/nas/2-darts-3.png" width="40%">
 

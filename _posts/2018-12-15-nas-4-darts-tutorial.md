@@ -310,6 +310,8 @@ def virtual_step(self, trn_X, trn_y, xi, w_optim):
 
 `deepcopy` 를 통해 기존 네트워크를 카피하고, 1 step 학습을 진행한다. `w_optim` 의 optimizer statistics (momentum) 은 변경되면 안 되므로, `optimizer.step()` 을 사용하는 것이 아니라 직접 파라메터들을 업데이트 해 준다. 언뜻 생각하면 `deepcopy` 으로 네트워크를 통째로 카피하는 것보다 virtual net 을 관리하면서 state_dict 만 업데이트 해 주는 것이 빠를 것 같지만 실제로 해 보면 `deepcopy` 가 훨씬 빠르다 (저자는 state_dict 로 구현했는데, 저자의 환경인 pytorch 0.3 에서는 그게 더 빨랐지만 지금은 아니다).
 
+> 2019.03.07 update) [version 0.2](https://github.com/khanrc/pt.darts/blob/0.2/architect.py#L19) 에서는 deepcopy 를 사용하지 않고 오리지널 네트워크에서 그라디언트를 계산하여 바로 v_net 에 업데이트 해 주는 방식을 사용하여 속도를 향상시켰다.
+
 이제 $w'$ 을 구했으니 validation loss 에 대해 그라디언트를 계산하고, 아래의 헤시안 항을 계산하면 unrolled gradient 를 계산할 수 있다.
 
 $$

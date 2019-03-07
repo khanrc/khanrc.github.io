@@ -10,7 +10,7 @@ description:        "Khanrc's blog"
 url:                "http://khanrc.github.io"
 baseurl:            ""
 #baseurl:            "" #For Root Domain
-permalink:          /:year/:month/:day/:title.html
+permalink:          /:title.html
 
 markdown: kramdown
 
@@ -48,3 +48,6 @@ defaults:
       type:         "posts"
     values:
       layout:       "post"
+
+# Timezone
+timezone: "Asia/Seoul"
