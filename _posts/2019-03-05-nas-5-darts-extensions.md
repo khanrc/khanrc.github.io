@@ -3,6 +3,7 @@ layout: post
 title: "AutoML (5) - DARTS: multi-gpu extension"
 tags: ['AutoML']
 date: 2019-03-05
+comments: true
 ---
 
 # Multi-GPU Extention
