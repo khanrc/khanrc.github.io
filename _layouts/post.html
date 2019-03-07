@@ -32,7 +32,9 @@ layout: default
 
   <!-- Disqus -->
   {% if page.comments %}
-      {% include disqus.html %}
+  <div class="post-disqus">
+    {% include disqus.html %}
+  </div>
   {% endif %}
 
 </div>

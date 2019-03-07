@@ -398,6 +398,9 @@ tbody tr:nth-child(odd) th {
     font-size: .75rem;
     text-transform: uppercase;
   }
+  &-disqus {
+    margin-top: 4rem;
+  }
 }
 
 .list {
