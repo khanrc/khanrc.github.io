@@ -41,7 +41,9 @@ def data_parallel(module, inputs, device_ids=None, output_device=None, dim=0, mo
 3. **Parallel apply**: 이제 각 gpu 는 모듈과 입력을 갖고 있으므로 forward 를 수행한다.
 4. **Gather**: forward 결과를 하나의 gpu 로 모은다.
 
-위 설명은 forward pass 에 해당하고, backward pass 는 이 과정을 거꾸로 따라가면 된다. 각 gpu 는 loss 에 대해 gradient 를 계산하고, 계산된 gradient 는 다시 하나의 gpu 로 모아져서 weights 를 업데이트한다.
+위 설명은 forward pass 에 해당하고, backward pass 는 이 과정을 거꾸로 따라가면 된다. 각 gpu 는 loss 에 대해 gradient 를 계산하고, 계산된 gradient 는 다시 하나의 gpu 로 모아져서 weights 를 업데이트한다. BERT 의 구현으로 유명한 huggingface 팀에서 만든 좋은 피규어가 있어서 소개한다:
+
+[![dataparallel]({{site.url}}/assets/nas/5-dataparallel.png)](https://medium.com/huggingface/training-larger-batches-practical-tips-on-1-gpu-multi-gpu-distributed-setups-ec88c3e51255)
 
 한걸음 더 들어가자면, 위 설명에서 파라메터를 각 gpu 마다 복제하고, 다시 각 gpu 의 gradient 를 하나의 gpu 로 모으는 과정이 data parallelism 에서의 병목 구간이 된다. 이 문제를 해결하기 위해 pytorch 는 Baidu 에서 제안한 ring-allreduce 알고리즘을 Nvidia 에서 구현한 NCCL (Nvidia Collective Communications Library) 을 사용한다. TensorFlow 등의 다른 라이브러리에서도 multi-gpu 를 직접 구현할 때 이 부분을 신경써주지 않으면 원하는 퍼포먼스가 나오지 않는다.
 
