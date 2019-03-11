@@ -236,5 +236,5 @@ class SearchCNNController(nn.Module):
 
 이제 multi-gpu 구현은 끝났지만, 사용하는 것은 여기서 끝이 아니다. Multi-gpu 를 사용할 때 주의하여야 할 점이 있다. Multi-gpu 를 100% 활용하기 위해서는 그만큼 batch size 를 늘려주어야 하는데, 이 경우 동일한 epoch 을 돈다고 하면 generalization 이 떨어진다는 것이 잘 알려져있다.
 
-이러한 문제를 다루는 연구들이 다양하게 있는데, 그 중 대표적인 논문이 2017년 페이스북의 [Accurate, Large Minibatch SGD: Training ImageNet in 1 Hour](https://arxiv.org/abs/1706.02677) 이다. 방법 자체는 어렵지 않으니 multi-gpu 를 사용한다면 고려해보자. 다만 이 방법이 DARTS 에 잘 적용될 것인지는 적용해 보기 전에는 확실히 알 수 없다.
+이러한 문제를 다루는 연구들이 다양하게 있는데, 그 중 대표적인 논문이 [2017년 페이스북의 Accurate, Large Minibatch SGD: Training ImageNet in 1 Hour](https://arxiv.org/abs/1706.02677) 이다. 방법 자체는 어렵지 않으니 multi-gpu 를 사용한다면 고려해보자. 다만 이 방법이 DARTS 에 잘 적용될 것인지는 적용해 보기 전에는 확실히 알 수 없다.
 
