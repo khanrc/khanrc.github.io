@@ -6,6 +6,12 @@ date: 2019-03-05
 comments: true
 ---
 
+1. [Introduction of AutoML and NAS]({% post_url 2018-12-15-nas-1-intro %})
+2. [DARTS]({% post_url 2018-12-15-nas-2-darts-explain %})
+3. [DARTS: mathmatics]({% post_url 2018-12-15-nas-3-darts-math %})
+4. [DARTS: tutorial]({% post_url 2018-12-15-nas-4-darts-tutorial %})
+5. [**DARTS: multi-gpu extension**]({% post_url 2019-03-05-nas-5-darts-extensions %})
+
 # Multi-GPU Extention
 
 본 포스트에서는 DARTS 구현의 multi-gpu 로의 확장을 다룬다. 이 내용의 최종 구현체는 <https://github.com/khanrc/pt.darts> 에서 확인할 수 있으며, [Tutorial post]({{site.url}}/nas-4-darts-tutorial.html) 는 [0.1 version](https://github.com/khanrc/pt.darts/tree/0.1) 을 기반으로 하고 본 포스트는 [0.2 verson](https://github.com/khanrc/pt.darts/tree/0.2) 을 기반으로 한다.
@@ -230,5 +236,5 @@ class SearchCNNController(nn.Module):
 
 이제 multi-gpu 구현은 끝났지만, 사용하는 것은 여기서 끝이 아니다. Multi-gpu 를 사용할 때 주의하여야 할 점이 있다. Multi-gpu 를 100% 활용하기 위해서는 그만큼 batch size 를 늘려주어야 하는데, 이 경우 동일한 epoch 을 돈다고 하면 generalization 이 떨어진다는 것이 잘 알려져있다.
 
-이러한 문제를 다루는 연구들이 다양하게 있는데, 그 중 대표적인 논문이 2017년 페이스북의 [Accurate, Large Minibatch SGD: Training ImageNet in 1 Hour](https://arxiv.org/abs/1706.02677) 이다. 방법 자체는 어렵지 않으니 multi-gpu 를 사용한다면 고려해보자. 다만 supervised learning 세팅에서 실험한 논문이므로 DARTS 에 잘 적용될 것인지는 적용해 보기 전에는 확실히 알 수 없다.
+이러한 문제를 다루는 연구들이 다양하게 있는데, 그 중 대표적인 논문이 2017년 페이스북의 [Accurate, Large Minibatch SGD: Training ImageNet in 1 Hour](https://arxiv.org/abs/1706.02677) 이다. 방법 자체는 어렵지 않으니 multi-gpu 를 사용한다면 고려해보자. 다만 이 방법이 DARTS 에 잘 적용될 것인지는 적용해 보기 전에는 확실히 알 수 없다.
 

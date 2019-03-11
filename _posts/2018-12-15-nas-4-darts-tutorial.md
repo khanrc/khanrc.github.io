@@ -6,6 +6,11 @@ date: 2018-12-15 01:00:00
 comments: true
 ---
 
+1. [Introduction of AutoML and NAS]({% post_url 2018-12-15-nas-1-intro %})
+2. [DARTS]({% post_url 2018-12-15-nas-2-darts-explain %})
+3. [DARTS: mathmatics]({% post_url 2018-12-15-nas-3-darts-math %})
+4. [**DARTS: tutorial**]({% post_url 2018-12-15-nas-4-darts-tutorial %})
+5. [DARTS: multi-gpu extension]({% post_url 2019-03-05-nas-5-darts-extensions %})
 
 # Tutorial
 
