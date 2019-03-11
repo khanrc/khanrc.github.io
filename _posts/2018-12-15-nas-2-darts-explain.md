@@ -13,11 +13,11 @@ comments: true
 5. [DARTS: multi-gpu extension]({% post_url 2019-03-05-nas-5-darts-extensions %})
 
 
-# Explanation
+# Differentiable Architecture Search
 
 ## Challenges
 
-이전 글에서 gradient-based method 로 darts 를 소개했다. 그러면 NAS 를 gradient 기반으로 학습하려면 어떻게 해야 할까? 지금까지 gradient 를 쓰지 못했던 것은 objective function 이 non-differentiable 했기 때문이었다. 그렇다면 이걸 어떻게 해야 differentiable 하게 만들 수 있을까?
+이전 글에서 gradient-based method 로 darts 를 소개했다. 그러면 gradient 기반으로 NAS 를 하려면 어떻게 해야 할까? 지금까지 gradient 를 쓰지 못했던 것은 objective function 이 non-differentiable 했기 때문이었다. 그렇다면 이걸 어떻게 해야 differentiable 하게 만들 수 있을까?
 
 가장 먼저 objective function 을 validaton accuracy 에서 validation loss 로 바꾸자. Accuracy 는 measure 자체가 non-differentiable 이므로 적합하지 않다. 그러면 validation loss 에 대해 controller parameters 가 미분 가능하면 된다. 당연한 얘기지만 우리가 만드는 child network 는 미분 가능하다. 그럼 뭐가 문제인가? controller 가 child network 를 만들어내는 과정이 문제인 것이다. RNN controller 를 사용하는 RL 기반 방법론들을 생각해보자. RNN 이 네트워크의 구조를 하나씩 생성한다. 이대로 child network 가 만들어지고 학습된다. 이 RNN output 이 child network 가 되는 과정이 non-differentiable 하기 때문에 gradient 기반 학습이 불가능하다. 
 
