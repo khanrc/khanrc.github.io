@@ -92,7 +92,9 @@ Value network 가 분포를 예측하도록 변환하는 건 그리 어렵지 �
 
 - Key idea: Learnable exploration
 
-RL 에서 항상 강조되는 이슈 중 하나가 바로 exploration-exploitation problem 이다. 어떻게 하면 exploration 을 잘할 수 있을 것인지도 주요한 연구 분야중 하나로, 원래 spinning up 의 key papers 에도 exploration 섹션이 따로 있다. 
+RL 에서 항상 강조되는 이슈 중 하나가 바로 exploration-exploitation problem 이다. 어떻게 하면 exploration 을 잘할 수 있을 것인지도 주요한 연구 분야중 하나다. 그런데 지금까지 exploration 을 하는 방식을 보면 가장 기본적인 epsilon greedy 방식을 적용하고 있다. 이를 좀 더 잘해볼 수 없을까?
+
+NoisyNet 은 네트워크의 weight 에 perturbation 을 주어 exploration 을 강제한다. 흥미로운 점은 이 perturbation 을 주는 파라메터가 learnable parameter 가는 점이다. 학습 과정에서 이 perturbation 정도가 알아서 조절된다.
 
 보통 네트워크의 최종 output 인 Q-value 를 계산하는 네트워크 마지막 단에는 linear layer 가 붙는다.
 
@@ -100,10 +102,26 @@ $$
 y=wx+b
 $$
 
+여기에 noise 를 주어 흔들면:
+
+$$
+y=(\mu^w+\sigma^w \odot \epsilon^w)x + \mu^b+\sigma^b\odot \epsilon^b
+$$
+
+이를 그림으로 표현하면 다음과 같다:
+
+![noisynet]({{site.url}}/assets/rl/dqn-noisynet.png)
+
+여기서 $\mu$ 와 $\sigma$ 는 learnable parameter 이고, $\epsilon$ 은 학습이 안 되는 noise 에 해당한다.
+
 ## Rainbow
 
-위에서 설명한 6개의 논문을 전부 합치고, 여기에 multi-step learning (n-step TD) 을 적용한 것이 Rainbow 다. Multi-step learning 이란 Q-learning 에서 target 을 계산할 때 원래 1-step forward target 을 사용하던 것을 n-step forward target 으로 바꾼 것이다. 예를 들어 3-step forward target 이라면
+위에서 설명한 6개의 논문을 전부 합치고, 여기에 multi-step learning (n-step TD) 을 적용한 것이 Rainbow 다. Multi-step learning 이란 Q-learning 에서 target 을 계산할 때 원래 1-step bootstrapping 을 하던 것을 n-step bootstrapping 으로 바꾼 것이다:
 
 $$
-y^{(n)}=r_1+\gamma r_2+...+\gamma^{n-1} r_n+\max_{a'} Q(S_n, a')
+y^{(n)}=r_1+\gamma r_2+...+\gamma^{n-1} r_n+\gamma^n \max_{a'} Q(S_n, a')
 $$
+
+n-step 을 실제로 진행하여 reward 를 받고, 그 이후의 값은 Q-value 로 대체한다.
+
+Rainbow 에서는 이렇게 7종류의 알고리즘을 사용하여 성능을 개선하였으며, ablation study 를 통해 각각의 알고리즘들이 성능 개선에 기여하고 있음을 보였다.
