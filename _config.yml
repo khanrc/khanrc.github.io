@@ -16,12 +16,8 @@ markdown: kramdown
 
 kramdown:
   input: GFM
+  parse_block_html: true
 
-# markdown: redcarpet
-# markdown_ext:  markdown,mkdown,mkdn,mkd,md
-
-# redcarpet:
-#   extensions: ["tables", "autolink", "strikethrough", "space_after_headers", "with_toc_data", "fenced_code_blocks", "no_intra_emphasis", "footnotes"]
 
 # Navigation
 nav:
@@ -51,3 +47,6 @@ defaults:
 
 # Timezone
 timezone: "Asia/Seoul"
+
+gems:
+  - jekyll-seo-tag

@@ -12,6 +12,8 @@ comments: true
 
 ## DQN (Deep Q-Networks)
 
+Mnih, Volodymyr, et al. "Human-level control through deep reinforcement learning." Nature 518.7540 (2015): 529.
+
 - Key idea: Q-learning with deep learning + experience replay + freeze target network
 
 DQN 은 Q-learning 에 function approximator 로 deep learning 을 사용한 버전이다. 딥마인드가 Atari 게임을 풀면서 유명해졌다. Q-learning 에서 Q-function 을 업데이트하는 Loss function 을 다음과 같이 사용한다:
@@ -34,6 +36,8 @@ $$
 
 ## Double DQN (DDQN)
 
+Van Hasselt, Hado, Arthur Guez, and David Silver. "Deep reinforcement learning with double q-learning." Thirtieth AAAI Conference on Artificial Intelligence. 2016.
+
 - Key idea: Q-value 가 튀었을 때 그 에러가 바로 퍼지지 않도록 방지책을 두자
 
 Q-learning 이 갖는 고질적인 문제점 중 over-estimation bias 라는 문제가 있다. Q-learning 에서 target 을 계산하기 위해 max 를 사용하기 때문에 발생한다. Stochastic 한 환경에서, 별로 좋은 state 가 아닌데 어쩌다 reward 가 좋게 튀었다고 생각해보자. 이 경우 Q-value 가 바로 좋은 값으로 업데이트되는데, 이 값이 운좋게 얻어걸린 값이라는걸 알기까지 여러번의 추가 방문이 필요하고, 이 동안 이미 이 잘못된 Q-value 가 다른 state 들로 다 전파되어 돌이킬 수 없는 상태가 된다.
@@ -52,6 +56,8 @@ $$
 
 ## Dueling DQN
 
+Wang, Ziyu, et al. "Dueling network architectures for deep reinforcement learning." arXiv preprint arXiv:1511.06581 (2015).
+
 - Key idea: Advantage function A(s,a)
 
 Q-learning 은 어떤 state s 에 대해 각 action a 의 state-action value function Q(s,a) 를 사용한다. 즉, state 가 주어지면 모든 action 에 대해 action value 를 계산해야 한다. 하지만 어차피 같은 state 라면 비슷한 가치를 지닐텐데, 굳이 각 action value 를 따로따로 계산할 필요가 있을까? Dueling DQN 은 Q(s,a) 를 바로 추정하는 대신 V(s) 와 A(s,a) 를 추정하여 Q(s,a) 를 계산하는 방식으로 value function 의 variance 를 잡는다.
@@ -62,9 +68,11 @@ $$
 
 아래는 이를 위한 네트워크 구조로, V(s) 와 A(s,a) 는 네트워크 파라메터를 상당 부분 공유할 수 있다.
 
-![dueling-dqn]({{site.url}}/assets/rl/dqn-duel.png)
+![dueling-dqn]({{site.url}}/assets/rl/dqn-duel.png){:.center}
 
 ## PER (Prioritized Experience Replay)
+
+Schaul, Tom, et al. "Prioritized experience replay." arXiv preprint arXiv:1511.05952 (2015).
 
 - Key idea: 경험에 우선순위를 두자
 
@@ -73,6 +81,8 @@ DQN 에서 도입한 Experience replay 는 모든 경험을 uniform 하게 샘�
 여기서 생각해 봐야 할 점이 하나 있다. 위 수식에서는 생략했지만 원래 DQN 의 Loss 는 expectation 이다. 즉, expectation 을 sampling 으로 대체하는 것이다. 그런데 이 때 sampling 을 uniform 하게 수행하지 않으면 bias 가 생긴다. PER 은 이 문제를 importance sampling 을 도입하여 해결한다.
 
 ## C51
+
+Bellemare, Marc G., Will Dabney, and Rémi Munos. "A distributional perspective on reinforcement learning." Proceedings of the 34th International Conference on Machine Learning-Volume 70. JMLR. org, 2017.
 
 추천 레퍼런스: [RLKorea Distributional RL](https://reinforcement-learning-kr.github.io/2018/09/27/Distributional_intro/)
 
@@ -89,6 +99,8 @@ Value network 가 분포를 예측하도록 변환하는 건 그리 어렵지 �
 ![c51]({{site.url}}/assets/rl/dqn-c51.png)
 
 ## NoisyNet
+
+Fortunato, Meire, et al. "Noisy networks for exploration." arXiv preprint arXiv:1706.10295 (2017).
 
 - Key idea: Learnable exploration
 
@@ -110,13 +122,17 @@ $$
 
 이를 그림으로 표현하면 다음과 같다:
 
-![noisynet]({{site.url}}/assets/rl/dqn-noisynet.png)
+![noisynet]({{site.url}}/assets/rl/dqn-noisynet.png){:.center}
 
 여기서 $\mu$ 와 $\sigma$ 는 learnable parameter 이고, $\epsilon$ 은 학습이 안 되는 noise 에 해당한다.
 
 ## Rainbow
 
+Hessel, Matteo, et al. "Rainbow: Combining improvements in deep reinforcement learning." Thirty-Second AAAI Conference on Artificial Intelligence. 2018.
+
 위에서 설명한 6개의 논문을 전부 합치고, 여기에 multi-step learning (n-step TD) 을 적용한 것이 Rainbow 다. Multi-step learning 이란 Q-learning 에서 target 을 계산할 때 원래 1-step bootstrapping 을 하던 것을 n-step bootstrapping 으로 바꾼 것이다:
+
+> Bootstrapping 이란 value estimation 을 할 때 다른 state 의 estimated value 에 기반하는 것을 말한다.
 
 $$
 y^{(n)}=r_1+\gamma r_2+...+\gamma^{n-1} r_n+\gamma^n \max_{a'} Q(S_n, a')
@@ -125,3 +141,5 @@ $$
 n-step 을 실제로 진행하여 reward 를 받고, 그 이후의 값은 Q-value 로 대체한다.
 
 Rainbow 에서는 이렇게 7종류의 알고리즘을 사용하여 성능을 개선하였으며, ablation study 를 통해 각각의 알고리즘들이 성능 개선에 기여하고 있음을 보였다.
+
+![rainbow]({{site.url}}/assets/rl/dqn-rainbow.png)

@@ -21,54 +21,54 @@ comments: true
 [Spinning up 에서 소개하고 있는 모든 key papers](https://spinningup.openai.com/en/latest/spinningup/keypapers.html) 를 여기서 다루는 것은 아니며, 반대로 여기에서 소개하는 논문이 key papers 에 없는 경우도 있다. 이 시리즈에서 다룰 논문들은 다음과 같다:
 
 1. Deep Q-learning (Rainbow)
-    - DQN
+    - DQN (Deep Q-Networks)
     - Double DQN (DDQN)
     - Dueling DQN
     - PER (Priortized Experience Replay)
     - C51
     - NoisyNet
     - Rainbow
-2. Policy gradients
+1. Policy gradients
     - REINFORCE
     - Actor-Critic
-    - GAE (Generalized Advantages Estimation)
+    - Off-policy Actor-Critic
     - A3C (Asynchronous Advantage Actor-Critic)
+    - GAE (Generalized Advantages Estimation)
     - NPG (Natural Policy Gradients)
     - TRPO (Trust Region Policy Optimization)
     - PPO (Proximal Policy Optimization)
-    - Off-policy Actor-Critic
-3. Deterministic policy gradients
+1. Deterministic policy gradients
     - DPG (Deterministic Policy Gradients)
     - DDPG (Deep DPG)
     - TD3 (Twin delayed DDPG)
-4. Path-Consistency Learning
+1. Path-Consistency Learning
     - PCL
-5. Scaling RL
+1. Scaling RL
     - A3C
     - IMPALA
     - Ape-X
-6. Entropy regularization
+1. Entropy regularization
     - SAC
     - TAC
-7. Intrinsic motivation
+1. Intrinsic motivation
     - CTS
     - RND
-8. Hierarchical RL
+1. Hierarchical RL
     - HER
     - HIRO
     - STRAW
-9. from Demonstration
+1. from Demonstration
     - DDPGfD
     - DQfD
     - Youtube
-10. Model-based RL
+1. Model-based RL
     - I2A
     - World model
     - AlphaZero
-11. Meta-RL
+1. Meta-RL
     - RL^2
     - SNAIL
-12. IRL
+1. IRL
     - GAIL
 
 DQN 이나 REINFORCE 등 시작점이 되는 알고리즘들은 간단하게 다루기는 하나 기본적으로 알고 있다고 가정한다.

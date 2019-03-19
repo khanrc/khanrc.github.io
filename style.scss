@@ -5,6 +5,8 @@
 $doc-font-size: 16;
 $doc-line-height: 26;
 $base-color          : rgba(#222,0.8);
+$lightgrey           : #D3D3D3;
+$grey                : #808080;
 $white               : #fff;
 
 // Mixins
@@ -83,6 +85,27 @@ $white               : #fff;
     float: right;
   }
 }
+
+
+
+///////// Custom ////////
+
+.center,
+div.center,
+a img.center {
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+img + em {
+  display: block;
+  text-align: center;
+  font-size: .8rem;
+  color: $grey;
+}
+
+/////////////////////////
 
 
 
