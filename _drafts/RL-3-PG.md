@@ -15,6 +15,10 @@ comments: true
 - https://lilianweng.github.io/lil-log/2018/04/08/policy-gradient-algorithms.html
 - [RLKorea PG여행](https://reinforcement-learning-kr.github.io/2018/06/29/0_pg-travel-guide/)
 
+NPG, TRPO, PPO:
+- http://www.andrew.cmu.edu/course/10-703/slides/Lecture_NaturalPolicyGradientsTRPOPPO.pdf
+- http://rll.berkeley.edu/deeprlcoursesp17/docs/lec5.pdf
+
 Policy gradient theorem 을 통해 얻을 수 있는 (vanilla) policy gradient 수식은 다음과 같다:
 
 $$
@@ -113,9 +117,14 @@ $$
 
 Kakade, Sham M. "A natural policy gradient." Advances in neural information processing systems. 2002.
 
+- Key idea: PG 를 구할 때, policy function 의 "real" steepest direction 인 natural gradient 를 이용하자
+- Intuition: gradient descent 는 step size 를 작게 주면 파라메터 $\theta$ 는 조금 변하겠지만 그 결과인 $f(\theta)$ 는 크게 변할 수 있고, 이게 policy 를 망가뜨릴 수 있다. 따라서 $f(\theta)$ 가 작게 변하는 natural gradient 를 이용하자.
+
 Natural gradients 추천 레퍼런스: 
 - https://wiseodd.github.io/techblog/2018/03/14/natural-gradient/
 - https://ipvs.informatik.uni-stuttgart.de/mlr/marc/notes/gradientDescent.pdf
+
+위 key idea 에 적었듯 natural policy gradient (NPG) 는 natural gradient 를 이용한 PG 다. 그러면 이 natural gradient 가 무엇이고 어떻게 이용하는지 알아봐야 할 텐데, 그 전에 먼저 (ordinary) gradient 에 대해서 먼저 생각해보자.
 
 Negative gradient 는 steepest descent direction 이다. 가장 경사가 가파른 방향이라는 것인데, 이 "steepest direction" 이라는 것에 대해 다시 한번 생각해보자. 가장 경사가 가파른 방향이라는 것이 정확히 어떤 것일까?
 
@@ -128,12 +137,15 @@ $$
 이러한 정의는 직관적이고 전혀 문제가 없어 보이지만, 위처럼 loss function 과 $\theta$ 로 표현하면 조금 이상한 부분이 있다 - parameter 간의 distance 를 L2 distance 로 정의하는 것이 맞을까? 우리의 policy function $\pi_\theta$ 는 확률분포를 나타내는 함수다. 두 policy function 간 거리를 측정한다고 하면 이 parameter 간의 euclidean distance 가 아니라 두 확률분포간의 거리를 측정하는 것이 맞을 것이다. 따라서 natural gradient 에서는 distance 로 두 확률분포간의 divergence 를 나타내는 KL divergence 를 사용한다.
 
 $$
-\frac{-\tilde\nabla L(\theta)}{\lVert \tilde\nabla L(\theta) \rVert} = \lim_{\epsilon \to 0} \frac{1}{\epsilon} \mathop{\text{arg min}}_{d \text{ s.t. } KL[\pi_\theta \Vert \pi_{\theta+d}]=\epsilon} L(\theta + d)
+\frac{-\tilde\nabla L(\theta)}{\lVert \tilde\nabla L(\theta) \rVert} = \lim_{\epsilon \to 0} \frac{1}{\epsilon} \mathop{\text{arg min}}_{d \text{ s.t. } KL[\pi_\theta \Vert \pi_{\theta+d}]=\epsilon} L(\theta + d) \tag1
 $$
 
 이러한 natural gradient 는 policy 의 parametrization 에 무관하게 정의하였으므로 reparametrization 에 invariant 하다. 이러한 특성을 covariant 라고 하며, gradient descent 는 non-covariant 가 된다.
 
-조금 더 들어가보자. 이 때 KL divergence 의 local curvature Hessian 은 Fisher Information Matrix 로 나타낼 수 있다:
+### One step more
+{:.no_toc}
+
+조금 더 들어가보자. 위에서 natural gradient 를 정의하기는 했지만 이 값을 어떻게 구해야 할지가 문제가 된다. 먼저, KL divergence 의 local curvature Hessian 은 Fisher Information Matrix 로 나타낼 수 있다:
 
 $$
 H_{KL[\pi_\theta\Vert\pi_{\theta'}]}=F
@@ -142,18 +154,117 @@ $$
 따라서 KL divergence 를 Taylor series 로 2차 근사하면:
 
 $$
-KL[\pi_\theta\Vert\pi_{\theta+d}] \approx \frac12 d^TFd \quad \text{where} ~ d \to 0
+KL[\pi_\theta\Vert\pi_{\theta+d}] \approx \frac12 d^TFd
 $$
 
+그러면 여기서 최적화해야 하는 objective function $L(\theta+d)$ 도 Taylor series 로 1차 근사하여 위 (1) 식을 Lagrangian method 로 풀면 다음과 같이 constrained optimization 을 penalized optimization 으로 바꿀 수 있다:
 
+$$
+\begin{align}
+d^* &= \mathop{\text{arg min}}_d \left[ L (\theta + d) + \lambda (KL[\pi_\theta \Vert \pi_{\theta + d}] - c) \right] \tag2 \\
+&\approx \mathop{\text{arg min}}_d \left[ L(\theta) + \nabla_\theta L(\theta)^T d + \frac{1}{2} \lambda d^T F d - \lambda c \right]
+\end{align}
+$$
 
+이 식은 d에 대한 2차함수이므로 미분하여 optima 를 찾을 수 있다:
 
+$$
+d=-\frac1\lambda F^{-1} \nabla L(\theta)
+$$
 
+여기서 어차피 $\frac1\lambda$ 는 constant 이므로 learning rate 에 집어넣으면 최종적으로 natural gradient $\tilde \nabla L(\theta)$ 는:
+
+$$
+\tilde \nabla L(\theta)=F^{-1}\nabla L(\theta)
+$$
+
+가 된다.
 
 ## TRPO
 
 Schulman, John, et al. "Trust Region Policy Optimization." Icml. Vol. 37. 2015.
 
+- Key idea: supervised learning 과는 달리, RL 에서는 잘못된 update 로 한번 policy 가 망가지면 다시 복구하는 데 오랜 시간이 걸린다. 따라서 망가지지 않는다는 보장이 되도록 update 하자.
+
+### NPG view
+{:.no_toc}
+
+- TRPO = NPG + Line search with improvement guarantee
+
+위에서 NPG 를 살펴보았다. TRPO 는 NPG 에서 한 걸음 더 나간 버전이다. NPG 에서 "올바른" steepest direction 을 찾았다. 하지만 여전히 "올바른" step size 는 알 수가 없다. 어떻게 해야 할까? TRPO 에서는 backtracking line search 를 통해 이 step size 를 설정한다. Line search 란 실제로 optimization step 을 진행하기 전에 optimization direction line 위의 값들을 살펴보고 step size 를 설정하는 방법이다.
+
+![backtracking-line-search](/assets/rl/pg-backtracking-line-search.png){:width="50%"" .center}
+*Adapted from [최적화 기법의 직관적 이해](https://darkpgmr.tistory.com/149) by 다크 프로그래머*
+
+Backtracking line search 는 위 그림과 같이 먼저 이동 후 값이 좋지 않으면 되돌아오는 방법이다.
+
+### TRPO view
+{:.no_toc}
+
+NPG 로부터 거쳐오면 위와 같이 설명할 수 있지만, TRPO 논문의 이론적 흐름은 사실 이렇게 흘러가지 않는다. 원래 TRPO 의 시작은 improvement guarantee 다. Key idea 에서 서술했듯, RL 에서는 한번 policy 가 망가지면 simulation 이 망가진 policy 로 되기 때문에 복구하기가 쉽지 않다.
+
+TRPO 에서는 이 policy improvement 를 보장하기 위해, 먼저 objective function $\eta(\theta)$ 를 근사하는 $L(\theta)$ 를 찾고, 여기에 KL divergence 로 penalty 를 주었을 때 이 값이 lower bound 가 됨을 보인다. 
+
+![pg-trpo](/assets/rl/pg-trpo.png){:width="40%" .center}
+
+이렇게 lower bound 를 찾았으니 이제 이 lower bound 를 maximize 하면 원래 objective function 도 같이 maximize 가 될 것이다. 이와 같이 lower bound 를 찾고 이를 대신 maximize 하는 방법을 Minorization-Maximization (MM) algorithm 이라고 부른다.
+
+$$
+\text{maximize}_{\theta'} \left[ L_\theta(\theta') - C\cdot KL^{\max}(\theta, \theta') \right]
+$$
+
+여기서 $KL^\max$ 가 계산이 어려우므로 sampling 으로 계산이 가능하게 expectation 으로 바꾸자:
+
+$$
+\begin{align}
+&\text{maximize}_{\theta'} \left[ L_\theta(\theta') - C\cdot \overline{KL}_\theta(\theta, \theta') \right] \tag3 \\
+&\text{where} \, \overline{KL}_\theta(\theta,\theta')=\mathbb E_{s\sim\rho_\theta}\left[ KL(\pi_\theta \Vert \pi_{\theta'}) \right]
+\end{align}
+$$
+
+NPG 와 TRPO 가 유사해지는 부분이 이 부분이다. 이론적 흐름은 다르지만, NPG 에서 KL divergence constraint 를 Lagrangian method 로 penalized problem 으로 바꾸어 나오는 (2) 식이 바로 위 식에 해당한다! (따라서 위 식을 그냥 풀면 NPG 가 된다)
+
+TRPO 에서는 NPG 와는 거꾸로 간다. practical 하게 이 식을 그대로 최적화하는 것 보다 hard constraint 로 변환하여 푸는 것이 large step size 를 가져갈 수 있어서 좋다고 한다:
+
+$$
+\begin{align}
+&\text{maximize}_{\theta'} L_{\theta}(\theta') \\
+&\text{subject to } \overline{KL}_\theta (\theta,\theta') \leq \delta \\
+\end{align}
+$$
+
+어차피 이 식을 푸는 것은 NPG 와 마찬가지로 Taylor series 로 approximation 하고 Lagrangian method 를 적용하지만, 이 때 step size 를 최대한 크게 해 주기 위해서 $\overline{KL}_\theta (\theta,\theta') = \delta$ 가 되도록 step size 를 정한다. 그리고 이게 improvement 가 보장되도록 다시 backtracking line search 를 적용하는 것이 최종 TRPO 가 된다.
+
+> 한 걸음 더) Fisher information matrix (FIM) 를 직접 계산하는 것은 너무 비싼 연산이다. Conjugate gradient descent 를 이용하면 FIM 을 직접 계산하지 않고 natural gradient 를 빠르게 계산할 수 있다.
+
 ## PPO
 
 Schulman, John, et al. "Proximal policy optimization algorithms." arXiv preprint arXiv:1707.06347 (2017).
+
+- Key idea: TRPO 는 second-order derivative 인 FIM 을 계산해야 해서 연산이 복잡하다. 그 직관은 유지하면서 연산을 간단하게 approximate 해 보자.
+
+TRPO 의 직관을 다시 정리해보자. Policy 를 업데이트 할 때 gradient 를 사용하면 step size 와 무관하게 펑펑 튈 수 있으므로 그렇지 못하도록 policy space 에 KL divergence 로 constraint 를 걸어 주어 policy 가 너무 크게 변하지 않으면서도 최대한 큰 step size 를 사용할 수 있도록 하였다. 그렇게 해서 나온 식 (3) 을 다시 쓰면:
+
+$$
+\text{maximize}_{\theta'} \, \mathbb E_{(s,a)\sim \rho_\theta}\left[\frac{\pi_\theta(a|s)}{\pi_{\theta'}(a|s)}A(s,a) - C\cdot \overline{KL}_\theta(\theta, \theta') \right]
+$$
+
+이고, probability ratio $r_{\theta'}(s,a)=\frac{\pi_\theta(a\|s)}{\pi_{\theta'}(a\|s)}$ 이라 하면:
+
+$$
+\text{maximize}_{\theta'} \, \mathbb E_{(s,a)\sim \rho_\theta}\left[r_{\theta'}(s,a)A(s,a) - C\cdot \overline{KL}_\theta(\theta, \theta') \right]
+$$
+
+가 된다. 그런데 어차피 이걸 approximation 을 해서 풀 거라면, 그렇게 복잡하게 하지 말고 간단하게 해 보면 어떨까? PPO 에서는 두 가지 방법을 제안한다. 먼저, 위에서 보면 probability ratio 함수 $r_{\theta'}(s,a)$ 가 policy 의 변화를 나타내므로, KL divergence penalty 를 쓰지 말고 그냥 이 값을 clipping 해 버리는 방법이 있다:
+
+$$
+L^{CLIP}(\theta)=\mathbb E_{(s,a)\sim \rho_\theta} \left[ \min(r_{\theta'}(s,a)A(s,a), \text{clip}(r_{\theta'}(s,a), 1-\epsilon, 1+\epsilon)A(s,a)) \right]
+$$
+
+아니면 KL divergence penalty coefficient C 를 적당히 KL divergence 값을 보면서 지속적으로 조정해주는 방법도 있다:
+
+$$
+L^{KLPEN}(\theta)=\mathbb E_{(s,a)\sim \rho_\theta}\left[r_{\theta'}(s,a)A(s,a) - \beta\cdot \overline{KL}_\theta(\theta, \theta') \right]
+$$
+
+이렇게 penalty coefficient 를 $\beta$ 로 두고, KL divergence 값의 변화에 따라 값이 커지면 적게 변하도록 줄여주고, 값이 작아지면 large step size 를 위해 키워주는 방식으로 조정한다.

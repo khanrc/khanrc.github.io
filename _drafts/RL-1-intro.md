@@ -22,11 +22,11 @@ Spinning up 에서 소개하고 있는 모든 [key papers](https://spinningup.op
 
 1. Deep Q-learning (Rainbow)
     - DQN (Deep Q-Networks)
-    - Double DQN (DDQN)
+    - DDQN (Double DQN)
     - Dueling DQN
     - PER (Priortized Experience Replay)
-    - C51
-    - NoisyNet
+    - ~~C51~~
+    - ~~NoisyNet~~
     - Rainbow
 1. Policy gradients
     - REINFORCE
@@ -41,10 +41,12 @@ Spinning up 에서 소개하고 있는 모든 [key papers](https://spinningup.op
     - DPG (Deterministic Policy Gradients)
     - DDPG (Deep DPG)
     - TD3 (Twin delayed DDPG)
+1. Distributional RL
+    - C51
 1. Path-Consistency Learning
     - PCL
 1. Scaling RL
-    - A3C
+    - ~~A3C~~
     - IMPALA
     - Ape-X
 1. Entropy regularization
@@ -53,6 +55,8 @@ Spinning up 에서 소개하고 있는 모든 [key papers](https://spinningup.op
 1. Intrinsic motivation
     - CTS
     - RND
+1. Learnable exploration
+    - NoisyNet
 1. Hierarchical RL
     - HER
     - HIRO
@@ -64,7 +68,7 @@ Spinning up 에서 소개하고 있는 모든 [key papers](https://spinningup.op
 1. Model-based RL
     - I2A
     - World model
-    - AlphaZero
+    - AlphaGoZero / AlphaZero / EXIT
 1. Meta-RL
     - RL^2
     - SNAIL
