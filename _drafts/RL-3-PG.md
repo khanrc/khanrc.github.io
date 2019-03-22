@@ -6,6 +6,9 @@ date: 2019-03-18
 comments: true
 ---
 
+* TOC
+{:toc}
+
 # Policy gradients
 
 추천 레퍼런스: 
@@ -110,7 +113,42 @@ $$
 
 Kakade, Sham M. "A natural policy gradient." Advances in neural information processing systems. 2002.
 
-Natural policy gradients (NPG) 를 이해하려면 먼저 natural gradients 에 대해 이해해야 한다. 
+Natural gradients 추천 레퍼런스: 
+- https://wiseodd.github.io/techblog/2018/03/14/natural-gradient/
+- https://ipvs.informatik.uni-stuttgart.de/mlr/marc/notes/gradientDescent.pdf
+
+Negative gradient 는 steepest descent direction 이다. 가장 경사가 가파른 방향이라는 것인데, 이 "steepest direction" 이라는 것에 대해 다시 한번 생각해보자. 가장 경사가 가파른 방향이라는 것이 정확히 어떤 것일까?
+
+어떤 포인트 x 로부터 거리 $\epsilon$ 인 모든 점들의 집합 B를 생각해보자. 2차원 공간이라면 원 형태가 될 것이다. 이 $\epsilon$ 이 0으로 갈 때, 집합 B 중에서 f(x) 가 가장 작은 점으로의 방향이 steepest direction 이다. 이를 우리의 loss function L 과 parameter $\theta$ 로 대입하여 정리하면:
+
+$$
+\frac{-\nabla L(\theta)}{\lVert \nabla L(\theta) \rVert} = \lim_{\epsilon \to 0} \frac{1}{\epsilon} \mathop{\text{arg min}}_{d \text{ s.t. } \lVert d \rVert = \epsilon} L(\theta + d)
+$$
+
+이러한 정의는 직관적이고 전혀 문제가 없어 보이지만, 위처럼 loss function 과 $\theta$ 로 표현하면 조금 이상한 부분이 있다 - parameter 간의 distance 를 L2 distance 로 정의하는 것이 맞을까? 우리의 policy function $\pi_\theta$ 는 확률분포를 나타내는 함수다. 두 policy function 간 거리를 측정한다고 하면 이 parameter 간의 euclidean distance 가 아니라 두 확률분포간의 거리를 측정하는 것이 맞을 것이다. 따라서 natural gradient 에서는 distance 로 두 확률분포간의 divergence 를 나타내는 KL divergence 를 사용한다.
+
+$$
+\frac{-\tilde\nabla L(\theta)}{\lVert \tilde\nabla L(\theta) \rVert} = \lim_{\epsilon \to 0} \frac{1}{\epsilon} \mathop{\text{arg min}}_{d \text{ s.t. } KL[\pi_\theta \Vert \pi_{\theta+d}]=\epsilon} L(\theta + d)
+$$
+
+이러한 natural gradient 는 policy 의 parametrization 에 무관하게 정의하였으므로 reparametrization 에 invariant 하다. 이러한 특성을 covariant 라고 하며, gradient descent 는 non-covariant 가 된다.
+
+조금 더 들어가보자. 이 때 KL divergence 의 local curvature Hessian 은 Fisher Information Matrix 로 나타낼 수 있다:
+
+$$
+H_{KL[\pi_\theta\Vert\pi_{\theta'}]}=F
+$$
+
+따라서 KL divergence 를 Taylor series 로 2차 근사하면:
+
+$$
+KL[\pi_\theta\Vert\pi_{\theta+d}] \approx \frac12 d^TFd \quad \text{where} ~ d \to 0
+$$
+
+
+
+
+
 
 ## TRPO
 

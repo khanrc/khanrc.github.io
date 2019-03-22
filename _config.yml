@@ -48,5 +48,5 @@ defaults:
 # Timezone
 timezone: "Asia/Seoul"
 
-gems:
+plugins:
   - jekyll-seo-tag

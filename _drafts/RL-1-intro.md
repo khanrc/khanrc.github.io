@@ -18,7 +18,7 @@ comments: true
 
 모든 분류가 그렇듯이 RL 알고리즘도 위와 같은 트리 구조로 분류하기에는 어려움이 있다. 
 
-[Spinning up 에서 소개하고 있는 모든 key papers](https://spinningup.openai.com/en/latest/spinningup/keypapers.html) 를 여기서 다루는 것은 아니며, 반대로 여기에서 소개하는 논문이 key papers 에 없는 경우도 있다. 이 시리즈에서 다룰 논문들은 다음과 같다:
+Spinning up 에서 소개하고 있는 모든 [key papers](https://spinningup.openai.com/en/latest/spinningup/keypapers.html) 를 여기서 다루는 것은 아니며, 반대로 여기에서 소개하는 논문이 key papers 에 없는 경우도 있다. 이 시리즈에서 다룰 논문들은 다음과 같다:
 
 1. Deep Q-learning (Rainbow)
     - DQN (Deep Q-Networks)

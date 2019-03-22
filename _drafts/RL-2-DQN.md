@@ -6,6 +6,9 @@ date: 2019-03-18
 comments: true
 ---
 
+* TOC
+{:toc}
+
 # Deep Q-learning
 
 여기서는 Q-learning 에 기반한 알고리즘들을 다루고, 이러한 알고리즘들을 통합적으로 적용하여 성능을 개선한 Rainbow 까지 살펴본다.
