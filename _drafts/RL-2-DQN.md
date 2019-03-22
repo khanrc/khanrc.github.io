@@ -33,9 +33,9 @@ $$
 
 다. 이것만으로 잘 되면 좋겠지만 그렇지가 않아서 여기에 몇 가지 트릭을 추가로 사용한다.
 
-**Trick 1.** Experience replay. RL 에서 데이터는 에이전트가 실제로 움직이면서 얻어내기 때문에, 자연스럽게 데이터 간 correlation 이 심하게 발생한다. 이 문제를 해결하기 위해 experience replay memory 라고 불리는 커다란 데이터 버퍼를 만들고, 다량의 데이터를 쌓아두고 여기서 랜덤하게 샘플링하여 학습에 사용한다. 이는 Q-learning 이 off-policy method 이기 때문에 가능한 방법이다.
+**Trick 1:** Experience replay. RL 에서 데이터는 에이전트가 실제로 움직이면서 얻어내기 때문에, 자연스럽게 데이터 간 correlation 이 심하게 발생한다. 이 문제를 해결하기 위해 experience replay memory 라고 불리는 커다란 데이터 버퍼를 만들고, 다량의 데이터를 쌓아두고 여기서 랜덤하게 샘플링하여 학습에 사용한다. 이는 Q-learning 이 off-policy method 이기 때문에 가능한 방법이다.
 
-**Trick 2.** Freeze target network. 보통의 supervised learning 과는 다르게, Q-learning 은 parametrized target 을 사용하기 때문에 네트워크를 업데이트 할 때마다 동일한 input 에 대해서도 target 값이 계속 바뀌어서 학습이 불안정해진다. DQN 에서는 학습을 안정화시키기 위해 target 값을 계산하는 Q-network 의 weight 를 고정시키고 일정 주기마다 한번씩 업데이트 해 주는 방식을 사용한다.
+**Trick 2:** Freeze target network. 보통의 supervised learning 과는 다르게, Q-learning 은 parametrized target 을 사용하기 때문에 네트워크를 업데이트 할 때마다 동일한 input 에 대해서도 target 값이 계속 바뀌어서 학습이 불안정해진다. DQN 에서는 학습을 안정화시키기 위해 target 값을 계산하는 Q-network 의 weight 를 고정시키고 일정 주기마다 한번씩 업데이트 해 주는 방식을 사용한다.
 
 ## Double DQN (DDQN)
 

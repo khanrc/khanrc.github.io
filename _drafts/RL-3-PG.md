@@ -246,25 +246,25 @@ Schulman, John, et al. "Proximal policy optimization algorithms." arXiv preprint
 TRPO 의 직관을 다시 정리해보자. Policy 를 업데이트 할 때 gradient 를 사용하면 step size 와 무관하게 펑펑 튈 수 있으므로 그렇지 못하도록 policy space 에 KL divergence 로 constraint 를 걸어 주어 policy 가 너무 크게 변하지 않으면서도 최대한 큰 step size 를 사용할 수 있도록 하였다. 그렇게 해서 나온 식 (3) 을 다시 쓰면:
 
 $$
-\text{maximize}_{\theta'} \, \mathbb E_{(s,a)\sim \rho_\theta}\left[\frac{\pi_\theta(a|s)}{\pi_{\theta'}(a|s)}A(s,a) - C\cdot \overline{KL}_\theta(\theta, \theta') \right]
+\text{maximize}_{\theta'} \, \mathbb E_{\tau\sim\pi_\theta}\left[\frac{\pi_\theta(a|s)}{\pi_{\theta'}(a|s)}A(s,a) - C\cdot \overline{KL}_\theta(\theta, \theta') \right]
 $$
 
 이고, probability ratio $r_{\theta'}(s,a)=\frac{\pi_\theta(a\|s)}{\pi_{\theta'}(a\|s)}$ 이라 하면:
 
 $$
-\text{maximize}_{\theta'} \, \mathbb E_{(s,a)\sim \rho_\theta}\left[r_{\theta'}(s,a)A(s,a) - C\cdot \overline{KL}_\theta(\theta, \theta') \right]
+\text{maximize}_{\theta'} \, \mathbb E_{\tau\sim\pi_\theta}\left[r_{\theta'}(s,a)A(s,a) - C\cdot \overline{KL}_\theta(\theta, \theta') \right]
 $$
 
-가 된다. 그런데 어차피 이걸 approximation 을 해서 풀 거라면, 그렇게 복잡하게 하지 말고 간단하게 해 보면 어떨까? PPO 에서는 두 가지 방법을 제안한다. 먼저, 위에서 보면 probability ratio 함수 $r_{\theta'}(s,a)$ 가 policy 의 변화를 나타내므로, KL divergence penalty 를 쓰지 말고 그냥 이 값을 clipping 해 버리는 방법이 있다:
+가 된다. 그런데 어차피 이걸 approximation 을 해서 풀 거라면, 그렇게 복잡하게 하지 말고 간단하게 해 보면 어떨까? PPO 에서는 두 가지 방법을 제안한다. 먼저 위에서 보면 probability ratio 함수 $r_{\theta'}(s,a)$ 가 policy 의 변화를 나타내므로, KL divergence penalty 를 쓰지 말고 그냥 이 값을 clipping 해 버리는 방법이 있다:
 
 $$
-L^{CLIP}(\theta)=\mathbb E_{(s,a)\sim \rho_\theta} \left[ \min(r_{\theta'}(s,a)A(s,a), \text{clip}(r_{\theta'}(s,a), 1-\epsilon, 1+\epsilon)A(s,a)) \right]
+L^{CLIP}(\theta)=\mathbb E_{\tau\sim\pi_\theta} \left[ \min(r_{\theta'}(s,a)A(s,a), \text{clip}(r_{\theta'}(s,a), 1-\epsilon, 1+\epsilon)A(s,a)) \right]
 $$
 
 아니면 KL divergence penalty coefficient C 를 적당히 KL divergence 값을 보면서 지속적으로 조정해주는 방법도 있다:
 
 $$
-L^{KLPEN}(\theta)=\mathbb E_{(s,a)\sim \rho_\theta}\left[r_{\theta'}(s,a)A(s,a) - \beta\cdot \overline{KL}_\theta(\theta, \theta') \right]
+L^{KLPEN}(\theta)=\mathbb E_{\tau\sim\pi_\theta}\left[r_{\theta'}(s,a)A(s,a) - \beta\cdot \overline{KL}_\theta(\theta, \theta') \right]
 $$
 
 이렇게 penalty coefficient 를 $\beta$ 로 두고, KL divergence 값의 변화에 따라 값이 커지면 적게 변하도록 줄여주고, 값이 작아지면 large step size 를 위해 키워주는 방식으로 조정한다.
