@@ -2,7 +2,7 @@
 layout: post
 title: "RL - Deterministic policy gradients"
 tags: ['RL']
-date: 2019-03-23
+date: 2019-03-22
 comments: true
 ---
 
@@ -53,22 +53,20 @@ $$
 
 Fujimoto, Scott, Herke van Hoof, and Dave Meger. "Addressing function approximation error in actor-critic methods." arXiv preprint arXiv:1802.09477 (2018).
 
-TD3 은 Twin Deplayed DDPG 의 약자로, DDQN 에서 다루었던 Q-learning 의 overestimation bias 를 해결하기 위한 twin Q-function 과 variance reduction 을 위한 delayed policy update 를 제안한다.
+TD3 은 Twin Deplayed DDPG 의 약자로, Q-learning 의 overestimation bias 를 해결하기 위한 twin Q-function 과 variance reduction 을 위한 delayed policy update 를 제안한다.
 
-DQN 에서 발생하는 overestimation bias 를 해결하기 위해 DDQN 에서 double Q-learning 을 도입했었다. TD3 에서는 이러한 bias 가 DDPG 에서도 마찬가지로 발생함을 보이고, 이를 해결하기 위해 Clipped double Q-learning 을 제안한다.
+DQN 에서 발생하는 overestimation bias 를 해결하기 위해 DDQN 에서 double Q-learning 을 도입했었다. TD3 에서는 이러한 bias 가 DDPG 에서도 마찬가지로 발생한다는 것을 보이고, 이를 해결하기 위한 방법을 제안한다.
+
+![overestimation-bias](/assets/rl/dpg-td3-bias.png){: width="60%" .center}
+*CDQ: Clipped Double Q-learning. DDPG 에서도 overestimation bias 가 발생하는 것을 볼 수 있다.*
+
+DDQN 에서는 double Q-learning 의 아이디어를 가져와서 이 문제를 해결했지만 actor-critic 세팅에서는 policy 가 천천히 바뀌기 때문에 target network 와 current network 가 크게 다르지 않아서 DPG 에서는 문제를 해결해주지 못한다. TD3 에서는 보다 강력하게 overestimation bias 를 방지하는 Clipped double Q-learning 을 사용한다. 이 방법은 double Q-learning 처럼 Q-function 을 2개 사용하면서 둘 중 낮은 값으로 target y 를 정한다. 
 
 $$
-y=r+\gamma \min_{\text{i=1,2}} Q_{\phi_i^-}(s',\mu'(s'))
+y=r+\gamma \min_{\text{i=1,2}} Q_{\phi_i^-}(s',\mu(s')+\epsilon) \\
+\epsilon \sim \text{clip}(N(0,\sigma), -c, c)
 $$
 
-- DQN (and Q-learning) 에 overestimation problem 이 있듯이, DPG 에도 approximate Q 를 사용하면서 생기는 overestimation problem 이 있음.
-  - **Clipped double Q-learning**
-    - double Q-learning + underestimation technique
-    - 2개의 Q-function 을 사용하고, 실제로 target Q 를 계산할 때에는 두 Q값 중 낮은 값을 사용한다.
-- Variance reduction
-  - **Target policy smoothing**
-    - Target policy 에 적당히 노이즈를 섞어서 스무딩시킴
-    - Entropy regularization 처럼 regularizer 역할. 어쩌다 값이 튀어서 peak 한 Q 값이 나와도 적당히 스무딩시켜서 너무 크게 영향받지 않도록 해줌
-  - **Soft target update & Delayed policy update**
-    - Soft target update: 네트워크를 조금씩 업데이트해줘서 variance reduction (DDPG 와 마찬가지)
-    - Delayed policy update: critic 을 actor 보다 더 많이 학습시킴 (critic 이 정확해야 policy 도 잘 학습됨)
+위 식에서 policy function $\mu(s)$ 뒤에 noise $\epsilon$ 이 붙어 있는 것을 볼 수 있다. DDPG 의 문제 중 하나는 Q 값이 어쩌다 한번 높게 튀었을 경우, policy 가 그걸 학습하여 exploit 하게 된다는 것이다. 위 noise 는 target policy smoothing regularizer 로, target policy 를 적당히 smoothing 시켜 이러한 문제를 경감시켜 준다.
+
+TD3 의 마지막 트릭은 policy 와 value 의 업데이트 밸런스에 대한 부분이다. 부정확한 value function 을 사용해서 policy 를 업데이트 할 경우 policy 가 망가질 수 있으므로, value function 을 정확하게 학습한 후 policy 를 천천히 업데이트 하자는 아이디어. Value function 을 policy 보다 자주 업데이트함으로써 밸런스를 맞춘다.

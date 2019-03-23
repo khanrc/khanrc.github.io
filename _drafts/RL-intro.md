@@ -63,8 +63,11 @@ Spinning up 에서 소개하고 있는 모든 [key papers](https://spinningup.op
     - Intrinsic motivation
         + CTS
         + RND (Random Network Distillation)
+1. Transfer and Multitask RL
+    - ~~HER~~
+    - PathNet
 1. Hierarchical RL
-    - HER (Hierarchical Experience Replay)
+    - HER (Hindsight Experience Replay)
     - HIRO (Hierarchical RL with Off-policy correction)
     - STRAW (Strategic Attentive Writer)
 1. from Demonstration
@@ -82,3 +85,9 @@ Spinning up 에서 소개하고 있는 모든 [key papers](https://spinningup.op
     - GAIL (Generative Adversarial Imitation Learning)
 
 DQN 이나 REINFORCE 등 시작점이 되는 알고리즘들은 간단하게 다루기는 하나 기본적으로 알고 있다고 가정한다.
+
+<!-- Not covered here:
+
+1. Memory
+2. Safety
+3. Reproducibility, Analysis, and Critique -->
