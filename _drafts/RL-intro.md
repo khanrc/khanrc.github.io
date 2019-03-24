@@ -22,7 +22,7 @@ Spinning up 에서 소개하고 있는 모든 [key papers](https://spinningup.op
 
 참고)
 
-- 아래 논문 리스트는 확정된 것이 아니며, 작성 과정에서 수정될 수 있음
+- 아래 논문 리스트 및 순서는 확정된 것이 아니며, 작성 과정에서 수정될 수 있음
 - 일부 2번씩 등장하는 논문들이 있는데, 추후 해당 섹션까지 글이 작성될 때 분류를 재조정할 예정인 논문들임
 
 1. Deep Q-learning
@@ -42,27 +42,16 @@ Spinning up 에서 소개하고 있는 모든 [key papers](https://spinningup.op
     - NPG (Natural Policy Gradients)
     - TRPO (Trust Region Policy Optimization)
     - PPO (Proximal Policy Optimization)
+1. Entropy regularization
+    - SAC (Soft Actor-Critic)
+    - TAC (Tsallis entropy Actor-Critic)
 1. Deterministic policy gradients
     - DPG (Deterministic Policy Gradients)
     - DDPG (Deep DPG)
     - TD3 (Twin delayed DDPG)
-1. Distributional RL
-    - ~~C51~~
-1. Path-Consistency Learning
-    - PCL
-1. Scaling RL
-    - ~~A3C~~
-    - IMPALA (Importance Weighted Actor-Learner Architecture)
-    - Ape-X
-1. Exploration
-    - Learnable exploration
-        + ~~NoisyNet~~
-    - Entropy regularization
-        + SAC (Soft Actor-Critic)
-        + TAC (Tsallis entropy Actor-Critic)
-    - Intrinsic motivation
-        + CTS
-        + RND (Random Network Distillation)
+1. Intrinsic motivation
+    - CTS
+    - RND (Random Network Distillation)
 1. Transfer and Multitask RL
     - UVFA (Universal Value Function Approximators)
     - HER (Hindsight Experience Replay)
@@ -70,6 +59,12 @@ Spinning up 에서 소개하고 있는 모든 [key papers](https://spinningup.op
 1. Hierarchical RL
     - HIRO (Hierarchical RL with Off-policy correction)
     - STRAW (Strategic Attentive Writer)
+1. Path-Consistency Learning
+    - PCL
+1. Scaling RL
+    - ~~A3C~~
+    - IMPALA (Importance Weighted Actor-Learner Architecture)
+    - Ape-X
 1. from Demonstration
     - DDPGfD
     - DQfD
