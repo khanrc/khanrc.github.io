@@ -64,10 +64,10 @@ Spinning up 에서 소개하고 있는 모든 [key papers](https://spinningup.op
         + CTS
         + RND (Random Network Distillation)
 1. Transfer and Multitask RL
-    - ~~HER~~
+    - UVFA (Universal Value Function Approximators)
+    - HER (Hindsight Experience Replay)
     - PathNet
 1. Hierarchical RL
-    - HER (Hindsight Experience Replay)
     - HIRO (Hierarchical RL with Off-policy correction)
     - STRAW (Strategic Attentive Writer)
 1. from Demonstration

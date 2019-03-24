@@ -2,7 +2,7 @@
 layout: post
 title: "RL - Policy gradients"
 tags: ['RL']
-date: 2019-03-18
+date: 2019-03-21
 comments: true
 ---
 

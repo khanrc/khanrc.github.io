@@ -2,7 +2,7 @@
 layout: post
 title: "RL - Deep Q-learning"
 tags: ['RL']
-date: 2019-03-18
+date: 2019-03-19
 comments: true
 ---
 
