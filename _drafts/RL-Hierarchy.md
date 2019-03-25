@@ -12,6 +12,8 @@ comments: true
 
 # Hierarchical RL
 
+## FUN
+
 ## HIRO
 
 ## STRAW
