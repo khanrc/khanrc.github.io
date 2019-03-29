@@ -2,7 +2,7 @@
 layout: post
 title: "RL - Intrinsic Motivation"
 tags: ['RL']
-date: 2019-03-24
+date: 2019-03-25
 comments: true
 ---
 
@@ -20,21 +20,23 @@ RL 이 맞닥뜨리는 주요한 챌린지 중 하나는 sparse reward 다. RL �
 
 이러한 문제를 해결하기 위해 제안된 여러가지 방법이 있다. 그 중 intrinsic motivation 은 exploration 을 어떻게 더 잘할 수 있을까에 대한 방법이다. 지금까지 소개된 exploration 방법들은 대부분 random exploration 에 의존한다. 하지만 사람의 경우 exploration 을 할 때에도 완전 랜덤이 아니라 여러가지 기준이 있다. 그리고 그 기준 중 중요한 하나는 "이전에 해보지 않은 것" 이다. 이전에 많이 가본 state 보다 별로 가보지 않은 state 를 exploration 하는 것이 좋을 것이다. 이와 같이 이전에 해보지 않은 것에 대한 동기부여를 intrinsic motivation 이라고 하며, curiosity-based RL 이라고도 불린다.
 
-## Pseudo-Counts
+## CTS-based Pseudocounts
 
 Bellemare, Marc, et al. "Unifying count-based exploration and intrinsic motivation." Advances in Neural Information Processing Systems. 2016.
 
 - Key idea: Approximated count (pseudo-count) based exploration
 
-Pseudo-Counts 는 이전까지 거의 학습을 하지 못하던 몬테주마의 복수 게임에서 처음으로 성과를 보인 논문이다. 앞서 설명했듯 이러한 sparse reward 환경에서 이전에 가보지 못한 state 에 동기부여를 주는 방식으로 문제를 해결한다. Count-based 라는 것은 각 state 에 카운팅을 해서 얼마나 가봤는지를 체크하는 방법이다.
+Pseudocounts 는 이전까지 거의 학습을 하지 못하던 몬테주마의 복수 게임에서 처음으로 성과를 보인 논문이다. 앞서 설명했듯 이러한 sparse reward 환경에서 이전에 가보지 못한 state 에 동기부여를 주는 방식으로 문제를 해결한다. Count-based 라는 것은 각 state 에 카운팅을 해서 얼마나 가봤는지를 체크하는 방법이다.
 
 $$
 V(s)=\max_a \left[ r + \gamma \mathbb E[V(s)] + \beta N(s,a)^{-1/2} \right]
 $$
 
-위 수식은 [MBIB-EB (2008)](https://www.sciencedirect.com/science/article/pii/S0022000008000767) 에서 제안된 수식으로, state-action 페어 (s,a) 에 대해 counting 을 하고, 이를 기반으로 uncertainty 를 계산하여 intrinsic reward 로 사용한다. 하지만 이 방법은 정말로 모든 state-action pair 를 카운팅하므로 state(-action) space 가 커지면 적용이 불가능하며, 설령 할 수 있다 하더라도 state 가 1픽셀의 RGB 값이 1만 달라져도 다른 state 가 되므로 이 state 가 얼마나 새로운지를 나타내는 수치가 될 수 없다.
+위 수식은 [MBIB-EB (2008)](https://www.sciencedirect.com/science/article/pii/S0022000008000767) 에서 제안된 수식으로, state-action pair (s,a) 에 대해 counting 을 하고, 이를 기반으로 uncertainty 를 계산하여 intrinsic reward 로 사용한다. 하지만 이 방법은 정말로 모든 state-action pair 를 카운팅하므로 state(-action) space 가 커지면 적용이 불가능하며, 설령 할 수 있다 하더라도 state 가 1픽셀의 RGB 값이 1만 달라져도 다른 state 가 되므로 이 state 가 얼마나 새로운지를 나타내는 수치가 될 수 없다.
 
-이 논문의 핵심 contribution 은 이러한 문제를 해결하기 위해 count-based uncertainty approximator 를 통해 approximated count, 즉 pseudo-count 를 계산한 것이다. 이를 계산하기 위해 state density model $\rho(s)$ 를 학습하여 사용한다. 그러면 아래 두 식을 정의할 수 있다:
+이 논문의 핵심 contribution 은 이러한 문제를 해결하기 위해 count-based uncertainty approximator 를 통해 approximated count, 즉 pseudo-count 를 계산한 것이다. 이를 계산하기 위해 density model $\rho(s)$ 를 모델링하여 사용하는데, 이 때 density model 로 사용하는 것이 바로 [Context Tree Switching (CTS)](https://deepmind.com/research/publications/skip-context-tree-switching/) 이라서 이름에 CTS-based 가 붙었다. 
+
+이 density model $\rho(s)$ 를 사용해서 아래 두 식을 정의할 수 있다:
 
 $$
 \rho_n(s)=\rho(s; s_{1:n}) \\

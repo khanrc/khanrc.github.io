@@ -1,8 +1,8 @@
 ---
 layout: post
-title: "RL - "
+title: "RL - (WIP) RL from Demonstration"
 tags: ['RL']
-date: 2019-03-24
+date: 2019-03-30
 comments: true
 ---
 

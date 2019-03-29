@@ -1,10 +1,13 @@
 ---
 layout: post
-title: "RL - "
+title: "RL - (WIP) Model-based RL"
 tags: ['RL']
-date: 2019-03-24
+date: 2019-04-01
 comments: true
 ---
+
+* TOC
+{:toc}
 
 # Model-based RL
 

@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "RL - Distributional RL"
+title: "RL - (Discard) Distributional RL"
 tags: ['RL']
 date: 2019-03-23
 comments: true
