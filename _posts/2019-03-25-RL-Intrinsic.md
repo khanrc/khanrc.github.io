@@ -77,7 +77,7 @@ $$
 
 feature 를 추출하는 embedding network $\phi$ 와 현재 state 와 action 을 기반으로 다음 state 를 예측하는 forward model $f$ 를 학습하여 사용한다. 이름 그림으로 표현하면:
 
-![icm-architecture](/assets/rl/intrinsic-icm-arch.png){:width="60%" .center}
+![icm-architecture](/assets/rl/intrinsic-icm-arch.png){:width="70%" .center}
 *Adapted from [OpenAI blog post: RL with
 Prediction-Based Rewards](https://openai.com/blog/reinforcement-learning-with-prediction-based-rewards/)*
 
@@ -97,7 +97,7 @@ Random Network Distaillation (RND) 은 ICM 의 직관을 그대로 가져오면�
 
 RND 는 다음 state 를 예측하는 대신, state 로부터 랜덤한 feature 를 추출하는 랜덤 네트워크를 두고 그 값을 target 으로 predictor 를 학습시켜 environment 의 stochasticity 에 영향받지 않도록 구성하였다. 랜덤 네트워크는 key idea 에서 이야기했던 것처럼 state 에 대해 deterministic 하여 같은 state 라면 같은 feature 를 추출하며, 동시에 유사한 state 라면 유사한 feature 를 추출하기 때문에 feature network 로 사용할 수 있다.
 
-![rnd-architecture](/assets/rl/intrinsic-rnd-arch.png){:.center width="60%"}
+![rnd-architecture](/assets/rl/intrinsic-rnd-arch.png){:.center width="70%"}
 *Adapted from [OpenAI blog post: RL with
 Prediction-Based Rewards](https://openai.com/blog/reinforcement-learning-with-prediction-based-rewards/)*
 
