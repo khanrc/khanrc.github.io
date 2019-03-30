@@ -11,12 +11,12 @@ comments: true
 
 # Intrinsic Motivation
 
-RL 이 맞닥뜨리는 주요한 챌린지 중 하나는 sparse reward 다. RL 은 처음에 랜덤 폴리시로 시작한다. 이 말은 곧 랜덤 폴리시로 reward 를 받을 수 있어야 학습이 가능하다는 의미다. 때문에 sparse reward 인 경우, 랜덤 폴리시로 reward 를 받을 수가 없어 학습이 안 된다. 
+RL 이 맞닥뜨리는 주요한 챌린지 중 하나는 sparse reward 다. RL 은 처음에 랜덤 폴리시로 시작한다. 이 말은 곧 랜덤 폴리시로 reward 를 받을 수 있어야 학습이 가능하다는 의미다. 때문에 sparse reward 인 경우, 랜덤 폴리시로 reward 를 받을 수가 없어 학습이 전혀 되지 않는다. 
 
 ![montezuma](/assets/rl/hrl-montezuma.png){:width="60%" .center}
 *Sparse reward problem 으로 유명한 몬테주마의 복수 게임*
 
-몬테주마의 복수 게임은 몬스터를 피해 열쇠를 먹고 문으로 가야 하는 게임이다(으로 알고 있다). 몬스터를 피해서 열쇠를 먹고 다시 몬스터를 피해 문까지 가야 리워드를 받을 수 있는 sparse reward 환경인 것이다. 이러한 환경에서 랜덤 액션 폴리시로 reward 를 받기란 불가능에 가깝기 때문에, 지금까지 소개된 기존의 알고리즘들은 거의 학습이 불가능했다.
+몬테주마의 복수 게임은 몬스터를 피해 열쇠를 먹고 문으로 가야 하는 게임이다. 몬스터를 피해서 열쇠를 먹고 다시 몬스터를 피해 문까지 가야 리워드를 받을 수 있는 sparse reward 환경인 것이다. 이러한 환경에서 랜덤 액션 폴리시로 reward 를 받기란 불가능에 가깝기 때문에, 지금까지 소개된 기존의 알고리즘들은 거의 학습이 불가능했다.
 
 이러한 문제를 해결하기 위해 제안된 여러가지 방법이 있다. 그 중 intrinsic motivation 은 exploration 을 어떻게 더 잘할 수 있을까에 대한 방법이다. 지금까지 소개된 exploration 방법들은 대부분 random exploration 에 의존한다. 하지만 사람의 경우 exploration 을 할 때에도 완전 랜덤이 아니라 여러가지 기준이 있다. 그리고 그 기준 중 중요한 하나는 "이전에 해보지 않은 것" 이다. 이전에 많이 가본 state 보다 별로 가보지 않은 state 를 exploration 하는 것이 좋을 것이다. 이와 같이 이전에 해보지 않은 것에 대한 동기부여를 intrinsic motivation 이라고 하며, curiosity-based RL 이라고도 불린다.
 
@@ -43,17 +43,24 @@ $$
 \rho'_n(s)=\rho(s; s_{1:n}s)
 $$
 
-첫번째 식은 sequence $s\_1, s\_2, ..., s\_n$ 을 보았을 때 다음에 s 가 등장할 확률이고, 두번째 식은 sequence $s\_1, s\_2, ..., s\_n, s$ 를 보았을 때 다음에 s 가 또 등장할 확률이다. 그러면 이 두 식을 활용해서 pseudo-count $\hat N$ 을 구할 수 있다:
+첫번째 식은 sequence $s\_1, s\_2, ..., s\_n$ 을 보았을 때 다음에 $s$ 가 등장할 확률이고, 두번째 식은 sequence $s\_1, s\_2, ..., s\_n, s$ 를 보았을 때 다음에 $s$ 가 또 등장할 확률이다. 그러면 이 두 식을 활용해서 pseudo-count $\hat N$ 을 구할 수 있다:
 
 $$
 \hat N_n(s)=\frac{\rho_n(s)(1-\rho'_n(s))}{\rho'_n(s)-\rho_n(s)}
 $$
 
-이 pseudo-count 는 곧 intrinsic reward 가 된다.
+이 pseudo-count 는 곧 intrinsic reward 가 된다:
 
 $$
 R^+_n(s,a)=\beta (\hat N_n(s) + 0.01)^{-1/2}
 $$
+
+Pseudocount 는 이러한 방법으로 몬테주마의 복수 게임에서 처음으로 학습에 성공한다.
+
+![cts-montezuma-results](/assets/rl/intrinsic-cts-montezuma.png){:.center width="90%"}
+*Results on Montezuma's revenge with DQN w/ and w/o pseudocount bonus*
+
+몬테주마의 복수 게임은 각 스테이지가 방으로 구성되어 있어 방에서 탈출해서 다른 방으로 이동해야 한다. Pseudocount 를 사용하지 않은 No bonus 세팅에서는 거의 학습이 안 되었지만, with bonus 세팅에서는 절반 이상 클리어한 것을 확인할 수 있다.
 
 ## ICM
 
@@ -61,7 +68,7 @@ Pathak, Deepak, et al. "Curiosity-driven exploration by self-supervised predicti
 
 - Key idea: 네트워크가 다음 state 를 예측하도록 학습시키면, 예측을 잘 못하는 경우가 uncertain state 다
 
-ICM 에서는 이러한 uncertainty 의 측정을 네트워크의 예측력 기반으로 바꾼다. 현재 state 와 action 을 기반으로 다음 state 를 예측하는데, 이 예측 정도가 얼마나 정확한지에 따라 uncertainty 를 매겨 intrinsic reward $r^i$ 를 생성한다. 직관적으로, 많이 가본 state 라면 예측을 잘 할 것이므로 uncertainty 가 낮을 것이고 그렇지 않은 state 라면 예측을 잘 못할 것이므로 높은 uncertainty 가 나올 것이다.
+Intrinsic Curiosity Module (ICM) 에서는 이러한 uncertainty 의 측정을 네트워크의 예측력 기반으로 바꾼다. 현재 state 와 action 을 기반으로 다음 state 를 예측하는데, 이 예측 정도가 얼마나 정확한지에 따라 uncertainty 를 매겨 intrinsic reward $r^i$ 를 생성한다. 직관적으로, 많이 가본 state 라면 예측을 잘 할 것이므로 uncertainty 가 낮을 것이고 그렇지 않은 state 라면 예측을 잘 못할 것이므로 높은 uncertainty 가 나올 것이다.
 
 $$
 \hat\phi(s')=f(\phi(s), a)  \\
@@ -86,7 +93,7 @@ Burda, Yuri, et al. "Exploration by random network distillation." arXiv preprint
 
 - Key idea: 랜덤 네트워크를 state 에 deterministic 하고, 유사한 state 에 대해 유사한 feature 를 뽑아주는 feature extractor 로 사용하자
 
-RND 는 ICM 의 직관을 그대로 가져오면서 ICM 이 갖는 문제점을 해결한다. Stochastic 한 environment 라면, 동일한 현재 state 와 action 이라도 다음 state 가 stochastic 하게 변할 수 있다. ICM 은 현재 state 와 action 으로 다음 state 를 얼마나 잘 예측하는지로 uncertainty 를 측정하기 때문에, 다음 state 가 충분히 많이 방문하여 익숙한 상황이라도 높은 uncertainty 를 갖게 된다.
+Random Network Distaillation (RND) 은 ICM 의 직관을 그대로 가져오면서 ICM 이 갖는 문제점을 해결한다. Stochastic 한 environment 라면, 동일한 현재 state 와 action 이라도 다음 state 가 stochastic 하게 변할 수 있다. ICM 은 현재 state 와 action 으로 다음 state 를 얼마나 잘 예측하는지로 uncertainty 를 측정하기 때문에, 다음 state 가 충분히 많이 방문하여 익숙한 상황이라도 stochastic 한 state 에서는 높은 uncertainty 를 갖게 된다.
 
 RND 는 다음 state 를 예측하는 대신, state 로부터 랜덤한 feature 를 추출하는 랜덤 네트워크를 두고 그 값을 target 으로 predictor 를 학습시켜 environment 의 stochasticity 에 영향받지 않도록 구성하였다. 랜덤 네트워크는 key idea 에서 이야기했던 것처럼 state 에 대해 deterministic 하여 같은 state 라면 같은 feature 를 추출하며, 동시에 유사한 state 라면 유사한 feature 를 추출하기 때문에 feature network 로 사용할 수 있다.
 

@@ -54,6 +54,30 @@ $$
 R_t^W = R_t + \alpha R_t^I
 $$
 
+### One step more: FuN on the Montezuma's revenge
+{:.no_toc}
+
+FuN 논문에서는 몬테주마의 복수 게임에 적용되어 성능이 나오고, 이 때 manager 가 semantic meaningful goal 을 생성한다는 것을 보여준다.
+
+![fun-montezuma-results](/assets/rl/hrl-fun-montezuma.png){:.center width="60%"}
+
+위 그래프가 총 180 timestep 이라고 하면, 이 trajectory 에는 180개의 state 와 goal 이 있을 것이다. 이 때 goal 에서 가장 가까운 future state 를 찾아서 goal count 를 1씩 증가시킨다. 즉, 어떤 state 의 goal count 가 10이라면 해당 state 와 가장 가까운 past goal 이 10개가 있다는 것이고, manager 가 해당 state 를 goal 로 10번 생성했다는 것이다. 즉, 이 그래프가 높다는 것은 FuN 프레임웤이 생각하는 sub-goal 에 해당하는 것이다.
+
+이 그림에서 볼 수 있듯, FuN 은 몬테주마의 복수 게임을 푼다. 그런데 잘 생각해보면 HRL 은 몬테주마의 복수 같은 sparse reward 와 관련이 없다. Intrinsic motivation 섹션에서 살펴보았듯, sparse reward problem 에서는 초기 랜덤 폴리시로 reward 를 받는 것이 불가능하기 때문에 학습이 안 되고, 이 문제를 해결하기 위해 보다 좋은 exploration 을 하자는 것이 intrinsic motivation 이었다. FuN 에서 이러한 exploration 방법을 도입한 것도 아닌데 어떻게 이 문제를 해결할 수 있었을까?
+
+#### FuN works like HER
+{:.no_toc}
+
+> **Disclaimer**: 이 섹션은 상당 부분 개인적인 생각이 포함되어 있음
+
+FuN 은 초기 exploration 단계에서 HER (Hindsight Experience Replay) 와 유사하게 작동한다. Sparse reward problem 특성상, 초기 exploration 단계에서 environment reward 는 받을 수 없지만, 대신 manager 가 생성하는 goal 에 의해 worker 는 intrinsic reward 를 받게 된다. 이 intrinsic reward 는 uncertainty 를 기반으로 하는 intrinsic motivation 방법과 달리 좋은 exploration 을 하게 해 주지는 않지만, 어쨌든 앞으로 나아가게 해 준다. 
+
+직관적으로 비유하자면, 아이를 가르칠 때 뭘 하든 비난만 하는 케이스와 뭘 하든 칭찬을 해주는 경우를 비교해보자. 만약 무얼 하든 비난만 한다면 아이는 그저 아무것도 하지 않는 사람으로 성장할 것이다. 하지만 설령 옳은 방향이 아닐지라도 칭찬을 계속 해 주면 아이는 그 방향으로 나아갈 것이고, 어떻든 무언가를 익힐 수 있을 것이다. 그리고 처음으로 돌아와서 이 과정을 반복하면 다양한 여러가지 기술을 익힐 수 있을 것이고, 그러다 보면 원래 목표했던 goal 에 도달할 수 있을 것이다.
+
+이와 같이, HER 은 실제로 목표한 goal 에 도달하지 못했더라도 reward 를 부여하여 어떻든 무언가를 배우고 앞으로 나아가게 하여 결국에는 goal 에 도달할 수 있도록 하는 방법이다. FuN 또한 초기에 manager 가 랜덤한 goal 을 생성하겠지만, 어떻든 worker 는 그 goal 로 향하도록 학습이 될 것이다. 계속 environment reward 를 받지 못하더라도 manager 가 헤매는 동안 worker 는 manager 가 지정한 goal 로 향하는 방법을 배울 것이고, 결국에는 부족한 manager 이더라도 똑똑한 worker 에 힘입어 goal 에 도달하여 environment reward 를 받아내고 학습이 가능해진다.
+
+> 추후 HER 내용이 포함된 Transfer and Multitask RL 파트 포스팅 시 위 내용 업데이트 예정.
+
 ## HIRO
 
 Nachum, Ofir, et al. "Data-efficient hierarchical reinforcement learning." Advances in Neural Information Processing Systems. 2018.
@@ -96,16 +120,23 @@ $$
 
 Vezhnevets, Alexander, et al. "Strategic attentive writer for learning macro-actions." Advances in neural information processing systems. 2016.
 
-STRAW 는 FuN 이나 HIRO 와는 다른 접근방법을 보인다. 처음 예제로 돌아와서, 몬테주마의 복수 게임을 푼다고 해 보자. 앞서 설명했듯 사람이라면 1) 열쇠를 먹고 2) 문으로 가자는 high-level goal 을 설정할 것이고, 이 goal 을 달성하기 위해 micro action 을 취할 것이다. 그런데 이 부분을 조금 더 구체적으로 생각해보면, 사람은 goal 을 달성하기 위해 plan 을 짠다. 매 순간순간 판단해서 action 을 취하는 것이 아니라, 처음에 상황을 보고 action plan 을 짠 다음에 순간순간의 상태 변화에 따라 주기적으로 plan 을 수정한다. 만약 goal 에 도달했다면 그 시점에 다음 goal 을 향한 새로운 plan 을 짤 것이다.
+STRAW 는 FuN 이나 HIRO 와는 다소 다른 접근방법을 취한다. 처음 예제로 돌아와서, 몬테주마의 복수 게임을 푼다고 해 보자. 앞서 설명했듯 사람이라면 1) 열쇠를 먹고 2) 문으로 가자는 high-level goal 을 설정할 것이고, 이 goal 을 달성하기 위해 micro action 을 취할 것이다. 그런데 이 부분을 조금 더 구체적으로 생각해보면, 사람은 goal 을 달성하기 위해 plan 을 짠다. 매 순간순간 판단해서 action 을 취하는 것이 아니라, 처음에 상황을 보고 action plan 을 짠 다음에 순간순간의 상태 변화에 따라 주기적으로 plan 을 수정한다. 만약 goal 에 도달했다면 그 시점에 다음 goal 을 향한 새로운 plan 을 짤 것이다.
 
 STRAW 는 이와 같은 action plan 컨셉을 도입한다. State 로부터 현재 action 만 취하는 것이 아니라, 앞으로에 대한 action plan 을 짜고, 언제쯤 plan 을 업데이트 할지를 가리키는 commitment plan 까지 결정한다.
 
-![straw-overview](/assets/rl/hrl-straw-overview.png){:.center}
+![straw-overview](/assets/rl/hrl-straw-overview.png){:.center width="80%"}
 *Overview of STRAW algorithm*
 
 이 그림에서 replan 이라는 것이 plan 업데이트에 해당한다. 이 replan 은 현재의 state embedding 을 기반으로 기존의 action plan 을 업데이트하는데, 이 때 경우에 따라 action plan 의 크기가 한번에 고려하기에는 너무 클 수 있으므로 중요한 부분에 attention 하는 기법을 사용하며 이를 attentive planning 이라고 한다:
 
-![straw-attentive-planning](/assets/rl/hrl-straw-attentive-planning.png){:.center width="90%"}
+1. action plan $A^t$ 로부터 state embedding $z_t$ 를 고려하여 attention 을 통해 action patch 를 뽑아낸다 (read).
+2. 여기서 다시 $z_t$ 를 고려하여 action patch 를 업데이트한다.
+3. 업데이트한 action patch 를 다시 기존 action plan 에 반영한다 (write).
+
+이를 그림으로 나타내면 다음과 같다:
+
+![straw-attentive-planning](/assets/rl/hrl-straw-attentive-planning.png){:.center width="80%"}
+*Attentive planning*
 
 이 replanning 이 너무 자주 일어나면 안 되므로 replan signal $c^t$ 자체를 loss 로 사용하여 replanning 에 핸디캡을 준다. 여기에 학습 알고리즘으로는 A3C 를 사용했다:
 
@@ -116,4 +147,4 @@ L=\sum^T_{t=1} \left( L^{out}(A^t)+g_t\cdot \alpha KL(Q(z_t|\xi_t)|P(z_t)) + \la
 \end{align}
 $$
 
-중간에 설명하지 않은 텀이 하나가 나온다. 위 식에서 $Q(z\_t\|\xi\_t)$ 는 action plan 에 추가적으로 noise 를 준 STRAW-explorer (STRAWe) 버전이다. 이에 대한 KL divergence 식은 noise 를 사용할 경우 너무 prior $P(z\_t)$ 에서 벗어나지 않도록 페널티를 준 것이다.
+중간에 설명하지 않은 텀이 하나가 나온다. 이 $Q(z\_t\|\xi\_t)$ 는 action plan 에 추가적으로 noise 를 준 STRAW-explorer (STRAWe) 버전이다. 여기에 KL divergence 로 페널티를 주어 noise 가 너무 prior $P(z\_t)$ 에서 벗어나지 않도록 한 것이다.
