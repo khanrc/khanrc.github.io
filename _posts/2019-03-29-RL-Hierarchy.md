@@ -68,8 +68,6 @@ FuN 논문에서는 몬테주마의 복수 게임에 적용되어 성능이 나�
 #### FuN works like HER
 {:.no_toc}
 
-> **Disclaimer**: 이 섹션은 상당 부분 개인적인 생각이 포함되어 있음
-
 FuN 은 초기 exploration 단계에서 HER (Hindsight Experience Replay) 와 유사하게 작동한다. Sparse reward problem 특성상, 초기 exploration 단계에서 environment reward 는 받을 수 없지만, 대신 manager 가 생성하는 goal 에 의해 worker 는 intrinsic reward 를 받게 된다. 이 intrinsic reward 는 uncertainty 를 기반으로 하는 intrinsic motivation 방법과 달리 좋은 exploration 을 하게 해 주지는 않지만, 어쨌든 앞으로 나아가게 해 준다. 
 
 직관적으로 비유하자면, 아이를 가르칠 때 뭘 하든 비난만 하는 케이스와 뭘 하든 칭찬을 해주는 경우를 비교해보자. 만약 무얼 하든 비난만 한다면 아이는 그저 아무것도 하지 않는 사람으로 성장할 것이다. 하지만 설령 옳은 방향이 아닐지라도 칭찬을 계속 해 주면 아이는 그 방향으로 나아갈 것이고, 어떻든 무언가를 익힐 수 있을 것이다. 그리고 처음으로 돌아와서 이 과정을 반복하면 다양한 여러가지 기술을 익힐 수 있을 것이고, 그러다 보면 원래 목표했던 goal 에 도달할 수 있을 것이다.

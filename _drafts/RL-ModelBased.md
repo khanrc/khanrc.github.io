@@ -2,7 +2,7 @@
 layout: post
 title: "RL - (WIP) Model-based RL"
 tags: ['RL']
-date: 2019-04-01
+date: 2019-04-02
 comments: true
 ---
 
