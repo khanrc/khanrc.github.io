@@ -18,13 +18,13 @@ RL 의 agent 는 micro action 으로 움직인다. 앞서 intrinsic motivation �
 
 게임을 해본 적은 없지만, 아마 이 게임에서 액션이라고 하면 좌우 이동과 점프 그리고 사다리가 있다면 내려가는 4개의 상하좌우 키로 구성되어 있을 것이다. 일반적으로 RL 에이전트는 이 액션을 그대로 가져가서, 각 state 에서 상하좌우 중 하나의 액션을 취하고, environment 가 다음 state 를 돌려주면 다시 그에 맞는 액션을 취하는 방식으로 동작하게 된다.
 
-하지만 사람은 이렇게 행동하지 않는다. Intrinsic motivation 에서 설명했듯 몬테주마의 복수 게임은 먼저 열쇠를 먹고 문으로 가야 하는 게임이므로, (충분히 학습된) 사람이 게임을 하면 먼저 1) 열쇠를 먹고 2) 문으로 갈 것이다. 열쇠를 먹으러 갈때 장애물들을 피해서 갈 것이고, 장애물들을 피해 열쇠로 향하기 위해 각 state 마다 적절한 action 을 취할 것이다. 즉 사람은 액션을 정함에 있어서 hierarchy 가 있어서, 먼저 상위 액션을 결정하고, 상위 액션을 취하기 위해 하위 액션들을 결정하게 된다. Hierarchical RL (HRL) 은 이러한 관점을 따르는 접근법이다.
+하지만 사람은 이렇게 행동하지 않는다. Intrinsic motivation 에서 설명했듯 몬테주마의 복수 게임은 먼저 열쇠를 먹고 문으로 가야 하는 게임이므로, (충분히 학습된) 사람이 게임을 하면 먼저 1) 열쇠를 먹고 2) 문으로 갈 것이다. 열쇠를 먹으러 갈때 장애물들을 피해서 갈 것이고, 장애물들을 피해 열쇠로 향하기 위해 각 state 마다 적절한 action 을 취할 것이다. 즉 사람은 액션을 정함에 있어서 hierarchy 가 있어서 먼저 상위 액션을 결정하고 상위 액션을 취하기 위해 하위 액션들을 결정하게 된다. Hierarchical RL (HRL) 은 이러한 관점을 따르는 접근법이다.
 
 ## FuN
 
 Vezhnevets, Alexander Sasha, et al. "Feudal networks for hierarchical reinforcement learning." Proceedings of the 34th International Conference on Machine Learning-Volume 70. JMLR. org, 2017.
 
-FuN 에서는 hierarchy 를 주기 위해 micro action 을 수행하는 worker 와, worker 의 goal 을 만들어주는 manager 가 존재한다. Manager 는 상위 액션을 결정하여 worker 에게 goal 을 부여하고, worker 는 이 goal 을 달성하기 위해 움직이게 된다.
+FuN 에서는 hierarchy 를 주기 위해, micro action 을 수행하는 worker 와, worker 의 goal 을 만들어주는 manager 가 존재한다. Manager 는 상위 액션을 결정하여 worker 에게 goal 을 부여하고, worker 는 이 goal 을 달성하기 위해 움직이게 된다.
 
 ![fun-arch](/assets/rl/hrl-fun-arch.png){:.center width="80%"}
 *Architecture of FuN algorithm*
@@ -57,18 +57,18 @@ $$
 ### One step more: FuN on the Montezuma's revenge
 {:.no_toc}
 
-FuN 논문에서는 몬테주마의 복수 게임에 적용되어 성능이 나오고, 이 때 manager 가 semantic meaningful goal 을 생성한다는 것을 보여준다.
+FuN 논문에서는 몬테주마의 복수 게임에서 일정 수준 이상의 학습이 가능하며, 이 때 manager 가 semantic meaningful goal 을 생성한다는 것을 보여준다.
 
 ![fun-montezuma-results](/assets/rl/hrl-fun-montezuma.png){:.center width="60%"}
 
-위 그래프가 총 180 timestep 이라고 하면, 이 trajectory 에는 180개의 state 와 goal 이 있을 것이다. 이 때 goal 에서 가장 가까운 future state 를 찾아서 goal count 를 1씩 증가시킨다. 즉, 어떤 state 의 goal count 가 10이라면 해당 state 와 가장 가까운 past goal 이 10개가 있다는 것이고, manager 가 해당 state 를 goal 로 10번 생성했다는 것이다. 즉, 이 그래프가 높다는 것은 FuN 프레임웤이 생각하는 sub-goal 에 해당하는 것이다.
+위 그래프가 총 180 timestep 이라고 하면, 이 trajectory 에는 180개의 state 와 goal 이 있을 것이다. 이 때 goal 에서 가장 가까운 future state 를 찾아서 goal count 를 1씩 증가시킨다. 즉, 어떤 state 의 goal count 가 10이라면 해당 state 와 가장 가까운 past goal 이 10개가 있다는 것이고, manager 가 해당 state 를 goal 로 10번 생성했다는 것이다. 결국 이 그래프가 높은 지점이 FuN 프레임웤이 생각하는 sub-goal 에 해당한다.
 
-이 그림에서 볼 수 있듯, FuN 은 몬테주마의 복수 게임을 푼다. 그런데 잘 생각해보면 HRL 은 몬테주마의 복수 같은 sparse reward 와 관련이 없다. Intrinsic motivation 섹션에서 살펴보았듯, sparse reward problem 에서는 초기 랜덤 폴리시로 reward 를 받는 것이 불가능하기 때문에 학습이 안 되고, 이 문제를 해결하기 위해 보다 좋은 exploration 을 하자는 것이 intrinsic motivation 이었다. FuN 에서 이러한 exploration 방법을 도입한 것도 아닌데 어떻게 이 문제를 해결할 수 있었을까?
+이렇듯 FuN 은 몬테주마의 복수에서 유의미한 성과를 거뒀다. 그런데 잘 생각해보면 HRL 은 몬테주마의 복수 같은 sparse reward problem 과 관련이 없다. Intrinsic motivation 섹션에서 살펴보았듯, sparse reward problem 에서는 초기 랜덤 폴리시로 reward 를 받는 것이 불가능하기 때문에 학습이 안 되고, 이 문제를 해결하기 위해 보다 좋은 exploration 을 하자는 것이 intrinsic motivation 이었다. FuN 에서 이러한 exploration 방법을 도입한 것도 아닌데 어떻게 이 문제를 해결할 수 있었을까?
 
 #### FuN works like HER
 {:.no_toc}
 
-FuN 은 초기 exploration 단계에서 HER (Hindsight Experience Replay) 와 유사하게 작동한다. Sparse reward problem 특성상, 초기 exploration 단계에서 environment reward 는 받을 수 없지만, 대신 manager 가 생성하는 goal 에 의해 worker 는 intrinsic reward 를 받게 된다. 이 intrinsic reward 는 uncertainty 를 기반으로 하는 intrinsic motivation 방법과 달리 좋은 exploration 을 하게 해 주지는 않지만, 어쨌든 앞으로 나아가게 해 준다. 
+FuN 은 초기 exploration 단계에서 HER (Hindsight Experience Replay) 와 유사하게 작동한다. Sparse reward problem 특성상 초기 exploration 단계에서 environment reward 는 받을 수 없지만, 대신 manager 가 생성하는 goal 에 의해 worker 는 intrinsic reward 를 받게 된다. 이 intrinsic reward 는 uncertainty 를 기반으로 하는 intrinsic motivation 방법과 달리 좋은 exploration 을 하게 해 주지는 않지만, 어쨌든 앞으로 나아가게 해 준다. 
 
 직관적으로 비유하자면, 아이를 가르칠 때 뭘 하든 비난만 하는 케이스와 뭘 하든 칭찬을 해주는 경우를 비교해보자. 만약 무얼 하든 비난만 한다면 아이는 그저 아무것도 하지 않는 사람으로 성장할 것이다. 하지만 설령 옳은 방향이 아닐지라도 칭찬을 계속 해 주면 아이는 그 방향으로 나아갈 것이고, 어떻든 무언가를 익힐 수 있을 것이다. 그리고 처음으로 돌아와서 이 과정을 반복하면 다양한 여러가지 기술을 익힐 수 있을 것이고, 그러다 보면 원래 목표했던 goal 에 도달할 수 있을 것이다.
 
