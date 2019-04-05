@@ -66,22 +66,52 @@ Optimization-based method 계열은 위의 접근들과 다르게 결국 meta te
 
 ![meta-rl](/assets/rl/meta-metarl.png){:.center}
 
-앞서 SL 이 $y=f_\theta(x)$ 를 찾는 문제라면, meta-SL 은 $y=f_\theta(x; D)$ 를 "빨리" 찾는 문제라고 했었다. 이를 RL 에 대입하면, RL 은 $a=\pi_\theta(s)$ 를 찾는 문제고, meta-RL 은 $a=\pi_\theta(s; D)$ 를 마찬가지로 "빨리" 찾는 문제가 된다. SL 에서의 data point (x, y) pair 는 RL 에서는 한번의 experience (s, a, r, s') 이 된다. 
+앞서 SL 이 $y=f_\theta(x)$ 를 찾는 문제라면, meta-SL 은 $y=f_\theta(x; D)$ 를 "빨리" 찾는 문제라고 했었다. 이를 RL 에 대입하면, RL 은 $a=\pi_\theta(s)$ 를 찾는 문제고, meta-RL 은 $a=\pi_\theta(s; D)$ 를 마찬가지로 "빨리" 찾는 문제가 된다. SL 에서의 data point (x, y) pair 는 RL 에서는 한번의 experience (s, a, r, s') 이 된다. SL 에서는 클래스 별로 하나씩 이미지를 주고 학습하라는 것이 챌린지였다면, RL 에서는 환경에 대해 1회의 trial 만으로 학습하는 것이 챌린지가 되는 식이다.
 
 ## RL^2
 
 Duan, Yan, et al. "RL $^ 2$: Fast Reinforcement Learning via Slow Reinforcement Learning." arXiv preprint arXiv:1611.02779 (2016).
 
+- Key idea: Model-based meta-RL
+
+RL^2 는 model-based meta-RL 이다. Meta training 시에 다양한 environment 에 대한 interaction 을 통해 general 한 interpretation 을 얻고, 이를 사용하여 적은 수의 trial 만으로도 새로운 environment 를 학습할 수 있다.
+
+![meta-rl^2](/assets/rl/meta-rl^2.png){:.center}
+
+RL^2 에서는 위와 같이 2 episode 를 1 trial 이라 부른다. Trial 에서 경험한 내용들을 전부 활용할 수 있도록 policy 를 RNN 으로 디자인하여 internal memory 를 활용할 수 있게 하였다. Meta-RL problem 이므로 한번의 trial 이 끝나면 다음 trial 에서는 새로운 environment 로 변하고, 따라서 RNN hidden state 도 이어서 가져가지 않고 초기화하는 방식으로 구성된다. 최종적으로는 한번의 trial 에서 얻는 return 을 maximize 하도록 학습하여, 에이전트가 2번의 episode 만에 "빨리" 학습할 수 있도록 한다. 
+
+RNN 은 GRU 를 사용하였고, TRPO 와 GAE 를 사용하여 학습하였다.
+
 ## SNAIL
 
 Mishra, Nikhil, et al. "A simple neural attentive meta-learner." arXiv preprint arXiv:1707.03141 (2017).
 
-SNAIL (Simple Neural Attentive Learner)
+- Key idea: RL^2 + advanced temporal dependency design
+
+Long-term dependency 를 모델링하기 위해서 제안된 RNN 은 생각보다 long-term dependency 를 그리 잘 잡아내지 못한다. 그 때문에 LSTM 이 제안되었지만, LSTM 조차도 long-term dependency 를 잘 잡아내지 못한다는 것이 근래에 밝혀졌다. 그래서 최근에는 아예 이러한 sequential model 을 사용하지 않고, 보다 직접적인 long-term connection 을 사용하는 방법들이 제안되었다. 대표적으로 [Transformer](http://papers.nips.cc/paper/7181-attention-is-all-you-need) 에서 사용한 self-attention 이나 [WaveNet](https://arxiv.org/abs/1609.03499) 에서 사용한 temporal causal convolution 등이 있다. 이와 같은 네트워크 모델링에서의 recent advances 들을 RL^2 에 더한 것이 Simple Neural Attentive Learner (SNAIL) 다.
+
+![SNAIL](/assets/rl/meta-snail.png){:.center width="80%"}
+*Adapted from [Mishra et al., 2017](http://metalearning.ml/papers/metalearn17_mishra.pdf) paper*
+
+위 그림과 같이 RNN 을 사용하지 않으며, 대신 temporal causal convolution (주황색) 과 self-attention (초록색) 을 같이 사용하였다. Temporal causal convolution 은 temporal dependency 를 잡기 위해 디자인되어 temporal 이 붙었고, 일반적인 conv 와 다르게 시간축 기준으로 미래 정보는 사용하지 않기 때문에 causal 이 붙었다.
+
+![temporal-conv](/assets/rl/meta-temporal-conv.png){:.center width="80%"}
+*Adapted from WaveNet paper*
+
+그리고 정확히 말하면 위와 같이 dialted convolution 이므로 temporal causal dialted convolution 이다. 이를 SNAIL 에서는 TC block 이라고 한다. Attention 또한 마찬가지로 미래 정보를 보지 못하도록 디자인하여 논문에서는 causal attention 이라고 부르기도 한다.
+
+최종적인 학습은 RL^2 와 마찬가지로 TRPO 와 GAE 를 사용하여 학습한다.
 
 ## MAML
 
 Finn, Chelsea, Pieter Abbeel, and Sergey Levine. "Model-agnostic meta-learning for fast adaptation of deep networks." Proceedings of the 34th International Conference on Machine Learning-Volume 70. JMLR. org, 2017.
 
+- Key idea: 적은 수의 데이터로 fine-tuning 을 해야 한다면, 처음부터 "적은 수의 데이터로 fine-tuning 을 했을 때 optimum 으로 가도록" 하는 objective function 을 사용하자!
+
 추천 레퍼런스: [PR12-094: MAML](https://youtu.be/fxJXXKZb-ik)
 
-MAML (Model-Agnostic Meta-Learning) 은 meta learning 이라는 task 를 그대로 모델링한다. 
+MAML (Model-Agnostic Meta-Learning) 은 기본적으로 pre-training 을 잘 해보자는 관점이다. 앞서 fine-tuning 을 한다고 해도 너무 적은 데이터로는 어렵다는 이야기를 했었다. 하지만 적은 데이터로도 fine-tuning 이 가능하게 하는 좋은 pre-trained weights 가 어딘가엔 존재하지 않을까? 이러한 관점으로부터, 어차피 나중에 fine-tuning 을 할 것이니 이것까지 고려하여 pre-training 하는 것이 MAML 의 접근이다.
+
+![maml](/assets/rl/meta-maml-keyidea.png){:.center}
+
+Fine-tuning 이 한번의 step 으로 이루어진다고 해 보자. 그러면 task j 에 대한 fine-tuned parameter $\phi_j$ 는 위와 같이 구할 수 있다. 우리가 pre-training phase 에서 정확히 하고 싶은 것은, 
