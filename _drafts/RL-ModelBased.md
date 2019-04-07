@@ -11,19 +11,46 @@ comments: true
 
 # Model-based RL
 
+Environment 를 모델링 한 것을 model 이라고 하며, 이를 활용하는 경우를 model-based RL 이라고 한다. 처음부터 모델을 알고 있는 케이스와 모델을 학습해서 사용하는 케이스로 나뉜다. 
 
+## Model is Learned
 
-## I2A (Imagination-Augmented Agents)
+### I2A (Imagination-Augmented Agents)
 
 Racanière, Sébastien, et al. "Imagination-augmented agents for deep reinforcement learning." Advances in neural information processing systems. 2017.
 
-## World models
+- Key idea
+  - Model-based RL + model-free RL
+  - Planning with learned model
+
+![I2a-arch](/assets/rl/mb-I2A-arch.png){:.center}
+
+- Imagination core
+  - Env model 은 pre-training 후 시작
+    - model-free 학습 => 이 policy 로 env model 학습 => I2A 시작
+  - Policy Net 은 I2A 의 imagination-augmented policy 를 따라하도록 학습
+- Single imagination rollout
+  - Rollout (simulation with imagination) 하고, 그 결과를 LSTM 을 태워서 rollout 정보를 인코딩
+  - 이 롤아웃 정보는 이 state 에서 우리가 만든 model 로 rollout 을 해본 정보가 담겨 있음
+- Full I2A architecture
+  - A3C 사용
+  - Model-free path
+    - 그냥 current observation 으로부터 바로 policy / value 예측하는 모델
+  - Imagination rollout 정보랑 model-free path 정보랑 싹 합쳐서 policy, value 만듦
+
+### World models
 
 Ha, David, and Jürgen Schmidhuber. "Recurrent world models facilitate policy evolution." Advances in Neural Information Processing Systems. 2018.
 
+- Key idea: policy network 를 model 과 controller 로 분리시켜서 large network 을 사용할 수 있도록 함
 
+보통 RL 에서 사용하는 policy network 는 image classification 등에서 사용하는 네트워크와 비교하면 훨씬 작은 모델을 사용한다. 이유는 - 잘 모르겠지만 아마도 학습이 빨리 되어야 하니까?
 
-## AGZ / AZ / EXIT
+아무튼 그런데, 이 policy network 는 사실 environment 에 대한 이해를 담고 있는 feature extractor 와 그 feature 로부터 액션을 결정하는 controller 로 나누어 볼 수 있다. World model 에서는 environment 에 대해 먼저 model 을 학습시키고, 이 model 을 feature extractor 로 사용한다. 이렇게 되면 복잡한 environment 를 커다란 네트워크로 모델링이 가능해지고, 이 뒤에 간단한 controller 를 붙여 학습시킨다.
+
+## Model is Given
+
+### AGZ / AZ / EXIT
 
 - AlphaGo Zero (AGZ): Silver, David, et al. "Mastering the game of go without human knowledge." Nature 550.7676 (2017): 354.
 - AlphaZero (AZ): Silver, David, et al. "A general reinforcement learning algorithm that masters chess, shogi, and Go through self-play." Science 362.6419 (2018): 1140-1144.
@@ -40,9 +67,17 @@ Ha, David, and Jürgen Schmidhuber. "Recurrent world models facilitate policy ev
 ![mcts](/assets/rl/mb-mcts.png){:.center}
 *MCTS in AGZ*
 
-이와 같이 planning 을 통해 현재 policy 보다 더 좋은 planned policy 를 얻었다면, 이 planned policy 를 target 으로 하여 학습할 수 있다. 또한 MCTS 에서는 policy function P(a|s) 뿐만 아니라 현재 state 를 평가하는 value function V(s) 도 필요한데, 이는 게임이 끝난 후 승패를 reward 로 하여 학습한다.
+이와 같이 planning 을 통해 현재 policy 보다 더 좋은 planned policy 를 얻었다면, 이 planned policy 를 target 으로 하여 학습할 수 있다. 또한 MCTS 에서는 policy function P(a|s) 뿐만 아니라 현재 state 를 평가하는 value function V(s) 도 필요한데, 이는 게임이 끝난 후 승패를 reward 로 하여 학습한다. AGZ 에서는 MCTS visit counts 로 target planned policy 를 생성하며, 이렇게 했을 때 모델 간 가위바위보 문제가 생기지 않고 robust 하게 잘 학습됨을 보였다. 
 
-### AlphaGo for everybody
+#### Self-play process in AZ/AGZ
+
+1. 현재 policy/value 를 사용하고, MCTS 에 exploration 을 위해 약간의 랜덤성을 가미하여 서로 붙인다. 서로 같은 모델이지만 랜덤성이 있기 때문에 어느정도는 서로 다른 플레이를 한다. 
+2. 한 게임이 끝나면, 그 게임 결과를 사용해서 value network $V(s)$ 를 학습시키고, 매 수마다의 MCTS visit counts 를 normalize 하여 만드는 MCTS policy (target planned policy) 로 policy network $P(a|s)$ 를 학습시킨다.
+3. 업데이트되어 더 강해진 policy/value 을 사용하여 다시 1로 돌아가 self-play 를 반복한다.
+
+사실 우리가 PG 논문들을 살펴보면서도 고민했듯 업데이트한다고 무조건 성능이 좋아지리란 보장이 있는 것은 아니다. 그래서 AGZ 에서는 성능 테스트를 진행하고 실제로 성능이 좋아졌는지를 체크하는 부분이 있다. 하지만 이후에 AZ 가 나오면서 그 부분이 빠졌고, 이는 매 스텝마다 성능이 좋아지리라는 보장은 없지만 계속 학습하면 어느정도 성능에 바운스가 있더라도 장기적으로는 계속 좋아진다는 것을 실험적으로 보인 셈이다.
+
+<!-- ### AlphaGo for everybody
 
 위에서는 지금까지의 흐름에 맞추어 설명했다면, 여기서는 그냥 최대한 직관적으로 알파고의 알고리즘에 대해 설명한다. 사실 알파고의 플레이 방식과 학습 방식은 사람의 그것과 매우 닮아있다.
 
@@ -56,4 +91,4 @@ Ha, David, and Jürgen Schmidhuber. "Recurrent world models facilitate policy ev
 
 사람이 장기를 둘 때 필요한 능력은 이렇듯 수읽기와 두가지 직관이다. 알파고는 이 세가지 요소를 그대로 가져가는데, 현재 상태에서 후보 수를 결정하는 policy network, 이를 기반으로 수를 읽는 MCTS, 수읽기를 할 때 현재 판세를 판단하는 value network 로 구성된다.
 
-학습 과정도 사람과 거의 유사하다. 사람이 장기 공부를 한다면, 아마 먼저 책을 보고 학원을 다녀서 다른 사람들의 플레이를 모방하고 따라하며 실력을 키울 것이다. 그리고 다른 사람과 대전하면서 점차 경험을 쌓아 실력을 증진시킬 것이다. 이 경험이 쌓인다는 것은 여러 요소가 있을 것인데, 먼저 수읽기를 해서 고른 최종 수가 잘 먹혀 경기에 이기면 다음번에는 유사한 상황이 되었을 때 그만큼의 수읽기를 하지 않더라도 이전의 경험을 살려 같은 플레이를 할 수 있을 것이다. 반대로 
+학습 과정도 사람과 거의 유사하다. 사람이 장기 공부를 한다면, 아마 먼저 책을 보고 학원을 다녀서 다른 사람들의 플레이를 모방하고 따라하며 실력을 키울 것이다. 그리고 다른 사람과 대전하면서 점차 경험을 쌓아 실력을 증진시킬 것이다. 이 경험이 쌓인다는 것은 여러 요소가 있을 것인데, 먼저 수읽기를 해서 고른 최종 수가 잘 먹혀 경기에 이기면 다음번에는 유사한 상황이 되었을 때 그만큼의 수읽기를 하지 않더라도 이전의 경험을 살려 같은 플레이를 할 수 있을 것이다. 반대로  -->
