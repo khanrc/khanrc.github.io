@@ -42,9 +42,9 @@ HER 에서도 마찬가지로 이러한 sparse reward problem 을 다루는데, 
 HER 은 experience replay 방법론이므로 DQN 이나 DDPG 등 다양한 off-policy method 와 함께 사용할 수 있다.
 
 ### Intuitive explanation
-{:no_toc}
+{:.no_toc}
 
-논문에서 하키 예시를 들었기 때문에 위에서도 하키 이야기를 했지만, 사실 HER 의 학습 방식이 하키 예시와 들어맞지는 않는다. 사람은 general intelligence 가 있기 때문에 실패를 분석하여 학습이 가능하지만, general intelligence 가 없는 HER 은 그렇게 할 수 없다.
+논문에서 하키 예시를 들었기 때문에 위에서도 하키 이야기를 했지만, 사실 HER 의 학습 방식이 하키 예시와 들어맞지는 않는다. 사람은 general intelligence (혹은 prior knowledge) 가 있기 때문에 실패를 분석하여 학습이 가능하지만, general intelligence 가 없는 HER 은 그렇게 할 수 없다.
 
 HER 의 학습 방식은 아이에게 해주는 격려와도 같다. 상황을 분석해서 학습을 하는 것은 아니지만, reward 를 받을 수 없는 부정적인 환경 속에서 정말로 잘했고 못했고를 떠나서 지속적인 격려를 해줌으로써 적극적인 에이전트를 만들어준다. 이 격려는 실패를 분석한 격려가 아니기 때문에 잘못된 방향으로 빠질 수도 있지만, 어차피 랜덤한 방향으로 격려를 해주는 것이기 때문에 시간이 지나면 언젠가 올바른 방향으로 갈 것이고 true reward 를 획득할 수 있을 것이다.
 
@@ -66,4 +66,4 @@ PathNet 은 AGI 를 표방하며 유명해진 논문이다. 일반적인 transfe
 
 각 task 를 위한 pathway 는 genetic algorithm (GA) 을 통해 학습한다. A3C 를 사용해서 64개의 후보 pathway 를 동시에 학습시키고, 가장 return 이 좋은 pathway 를 뽑아서 사용한다. 그리고 그 pathway 를 기반으로 다시 mutation 을 통해 64개의 후보 pathway 를 생성해내는 과정을 반복한다.
 
-사실 PathNet 은 그 유명세나 AGI 를 표방하는 것에 비해, 방법은 신선하지만 결과는 그다지 특별할 것이 없다. 그 때문인지 2017년 초에 처음 아카이브에 올라왔지만 이후에 어떤 학회나 저널에서 발표되지는 않았다.
+사실 PathNet 은 그 유명세나 AGI 를 표방하는 것에 비해, 방법은 신선하지만 결과는 그다지 특별할 것이 없다. 그 때문인지 2017년 초에 처음 아카이브에 올라왔지만 이후에 어떤 학회나 저널에서 발표되지는 않은 것으로 보인다.

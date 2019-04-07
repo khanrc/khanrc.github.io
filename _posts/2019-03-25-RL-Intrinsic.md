@@ -57,7 +57,7 @@ $$
 
 Pseudocount 는 이러한 방법으로 몬테주마의 복수 게임에서 처음으로 학습에 성공한다.
 
-![cts-montezuma-results](/assets/rl/intrinsic-cts-montezuma.png){:.center width="90%"}
+![cts-montezuma-results](/assets/rl/intrinsic-cts-montezuma.png){:.center width="100%"}
 *Results on Montezuma's revenge with DQN w/ and w/o pseudocount bonus*
 
 몬테주마의 복수 게임은 각 스테이지가 방으로 구성되어 있어 방에서 탈출해서 다른 방으로 이동해야 한다. Pseudocount 를 사용하지 않은 No bonus 세팅에서는 거의 학습이 안 되었지만, with bonus 세팅에서는 절반 이상 클리어한 것을 확인할 수 있다.
